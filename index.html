@@ -2,87 +2,71 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>インフォメーション</title>
+  <title>スプレッドシート連携</title>
   <style>
-    table { border-collapse: collapse; width: 100%; margin-bottom: 20px; }
-    th, td { border: 1px solid #ccc; padding: 5px; text-align: center; }
+    body { font-family: sans-serif; }
+    table { border-collapse: collapse; width: 100%; max-width: 800px; margin: 20px auto; }
+    td, th { border: 1px solid #ccc; padding: 5px; }
     input { width: 100%; box-sizing: border-box; }
-    #saveBtn { width: 100%; padding: 5px; }
+    button { margin: 10px; padding: 10px 20px; }
+    .center { text-align: center; }
   </style>
 </head>
 <body>
+  <h1 class="center">Googleスプレッドシート連携テーブル</h1>
+  <div class="center">
+    <button onclick="addRow()">行を追加</button>
+    <button onclick="saveData()">保存</button>
+  </div>
+  <table id="data-table"></table>
 
-<h2>📋 インフォメーション一覧（新しい順）</h2>
-<table id="infoTable">
-  <thead>
-    <tr>
-      <th>日付</th><th>時間</th><th>詳細</th><th>担当</th><th>フロア</th>
-    </tr>
-  </thead>
-  <tbody></tbody>
-</table>
+  <script>
+    const apiUrl = "https://script.google.com/macros/s/AKfycbwXBux356txEK54ID7juElqTcbGRO_EC4SWnufSkA9uopxzS4d37cSbo5j-wdGHE-c/exec";
 
-<h3>📝 新規登録</h3>
-<table>
-  <tr>
-    <td><input type="date" id="date"></td>
-    <td><input type="time" id="time"></td>
-    <td><input type="text" id="detail" placeholder="詳細"></td>
-    <td><input type="text" id="person" placeholder="担当"></td>
-    <td><input type="text" id="floor" placeholder="フロア"></td>
-    <td><button id="saveBtn">保存</button></td>
-  </tr>
-</table>
-
-<script>
-const scriptUrl = "https://script.google.com/macros/s/AKfycby6ifNpry5XJUtVXuhlSo8XJFKTdkiWi8wtmtLcN9JM_O9LTDpXSk1m7eK4Bkv6TIf7/exec";
-
-function loadData() {
-  fetch(scriptUrl)
-    .then(res => res.json())
-    .then(data => {
-      const tbody = document.querySelector("#infoTable tbody");
-      tbody.innerHTML = "";
+    async function loadData() {
+      const res = await fetch(apiUrl);
+      const data = await res.json();
+      const table = document.getElementById("data-table");
+      table.innerHTML = "";
       data.forEach(row => {
         const tr = document.createElement("tr");
-        row.forEach(cell => {
+        for (let i = 0; i < 5; i++) {
           const td = document.createElement("td");
-          td.textContent = cell;
+          const input = document.createElement("input");
+          input.value = row[i] || "";
+          td.appendChild(input);
           tr.appendChild(td);
-        });
-        tbody.appendChild(tr);
+        }
+        table.appendChild(tr);
       });
-    });
-}
+    }
 
-document.getElementById("saveBtn").addEventListener("click", () => {
-  const row = [
-    document.getElementById("date").value,
-    document.getElementById("time").value,
-    document.getElementById("detail").value.trim(),
-    document.getElementById("person").value.trim(),
-    document.getElementById("floor").value.trim()
-  ];
+    function addRow() {
+      const table = document.getElementById("data-table");
+      const tr = document.createElement("tr");
+      for (let i = 0; i < 5; i++) {
+        const td = document.createElement("td");
+        const input = document.createElement("input");
+        td.appendChild(input);
+        tr.appendChild(td);
+      }
+      table.appendChild(tr);
+    }
 
-  if (row.some(val => val === "")) {
-    alert("⚠️ すべての項目を入力してください");
-    return;
-  }
+    async function saveData() {
+      const rows = Array.from(document.querySelectorAll("#data-table tr"));
+      const data = rows.map(tr =>
+        Array.from(tr.querySelectorAll("input")).map(input => input.value)
+      );
+      await fetch(apiUrl, {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: { "Content-Type": "application/json" }
+      });
+      alert("保存しました！");
+    }
 
-  fetch(scriptUrl, {
-    method: "POST",
-    body: JSON.stringify(row),
-    headers: { "Content-Type": "application/json" }
-  })
-  .then(res => res.text())
-  .then(msg => {
-    alert(msg);
-    loadData(); // 再読み込み
-  });
-});
-
-window.onload = loadData;
-</script>
-
+    loadData();
+  </script>
 </body>
 </html>
