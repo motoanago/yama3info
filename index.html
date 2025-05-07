@@ -5,34 +5,37 @@
   <title>インフォメーション</title>
   <style>
     table { border-collapse: collapse; width: 100%; margin-bottom: 20px; }
-    td, th { border: 1px solid #ccc; padding: 5px; text-align: center; }
-    input { width: 100%; }
+    th, td { border: 1px solid #ccc; padding: 5px; text-align: center; }
+    input { width: 100%; box-sizing: border-box; }
+    #saveBtn { width: 100%; padding: 5px; }
   </style>
 </head>
 <body>
 
-<h2>インフォメーション一覧（新しい順）</h2>
+<h2>📋 インフォメーション一覧（新しい順）</h2>
 <table id="infoTable">
   <thead>
-    <tr><th>日付</th><th>時間</th><th>詳細</th><th>担当</th><th>フロア</th></tr>
+    <tr>
+      <th>日付</th><th>時間</th><th>詳細</th><th>担当</th><th>フロア</th>
+    </tr>
   </thead>
   <tbody></tbody>
 </table>
 
-<h3>新規登録</h3>
+<h3>📝 新規登録</h3>
 <table>
   <tr>
     <td><input type="date" id="date"></td>
     <td><input type="time" id="time"></td>
-    <td><input type="text" id="detail"></td>
-    <td><input type="text" id="person"></td>
-    <td><input type="text" id="floor"></td>
+    <td><input type="text" id="detail" placeholder="詳細"></td>
+    <td><input type="text" id="person" placeholder="担当"></td>
+    <td><input type="text" id="floor" placeholder="フロア"></td>
     <td><button id="saveBtn">保存</button></td>
   </tr>
 </table>
 
 <script>
-const scriptUrl = "hhttps://script.google.com/macros/s/AKfycbwX6MlCO7MzsyuiU1YGAq5D1D7GJU34HuXxOb5kNih8YdMzbCJUvVi8vZ99NHJ5u6fl/exec";
+const scriptUrl = "https://script.google.com/macros/s/【あなたのデプロイURL】/exec";
 
 function loadData() {
   fetch(scriptUrl)
@@ -62,7 +65,7 @@ document.getElementById("saveBtn").addEventListener("click", () => {
   ];
 
   if (row.some(val => val === "")) {
-    alert("すべての項目を入力してください");
+    alert("⚠️ すべての項目を入力してください");
     return;
   }
 
