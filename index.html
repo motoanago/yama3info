@@ -1,72 +1,74 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html>
 <head>
   <meta charset="UTF-8">
-  <title>スプレッドシート連携</title>
+  <title>明細編集</title>
   <style>
-    body { font-family: sans-serif; }
-    table { border-collapse: collapse; width: 100%; max-width: 800px; margin: 20px auto; }
-    td, th { border: 1px solid #ccc; padding: 5px; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { border: 1px solid #ccc; padding: 5px; text-align: center; }
     input { width: 100%; box-sizing: border-box; }
-    button { margin: 10px; padding: 10px 20px; }
-    .center { text-align: center; }
   </style>
 </head>
 <body>
-  <h1 class="center">Googleスプレッドシート連携テーブル</h1>
-  <div class="center">
-    <button onclick="addRow()">行を追加</button>
-    <button onclick="saveData()">保存</button>
-  </div>
-  <table id="data-table"></table>
+  <h2>明細編集フォーム</h2>
+  <table id="data-table">
+    <thead>
+      <tr>
+        <th>日付</th>
+        <th>時間</th>
+        <th>内容</th>
+        <th>担当</th>
+        <th>フロア</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+  <button onclick="updateData()">更新</button>
 
   <script>
-    const apiUrl = "https://script.google.com/macros/s/AKfycbwXBux356txEK54ID7juElqTcbGRO_EC4SWnufSkA9uopxzS4d37cSbo5j-wdGHE-c/exec";
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbymcAHzl4974yzBzrtICE5QwbAtjYzSGCQzgnGVvSFXXxtgcj6EKYeH71X0xylegbe9dQ/exec';
 
-    async function loadData() {
-      const res = await fetch(apiUrl);
+    async function fetchData() {
+      const res = await fetch(scriptURL);
       const data = await res.json();
-      const table = document.getElementById("data-table");
-      table.innerHTML = "";
-      data.forEach(row => {
-        const tr = document.createElement("tr");
-        for (let i = 0; i < 5; i++) {
-          const td = document.createElement("td");
-          const input = document.createElement("input");
-          input.value = row[i] || "";
-          td.appendChild(input);
-          tr.appendChild(td);
+      const tbody = document.querySelector("#data-table tbody");
+      tbody.innerHTML = '';
+
+      for (let i = 1; i <= 20; i++) {
+        const row = document.createElement('tr');
+        for (let j = 0; j < 5; j++) {
+          const cell = document.createElement('td');
+          const input = document.createElement('input');
+          input.type = 'text';
+          input.value = data[i]?.[j] || '';
+          cell.appendChild(input);
+          row.appendChild(cell);
         }
-        table.appendChild(tr);
-      });
-    }
-
-    function addRow() {
-      const table = document.getElementById("data-table");
-      const tr = document.createElement("tr");
-      for (let i = 0; i < 5; i++) {
-        const td = document.createElement("td");
-        const input = document.createElement("input");
-        td.appendChild(input);
-        tr.appendChild(td);
+        tbody.appendChild(row);
       }
-      table.appendChild(tr);
     }
 
-    async function saveData() {
-      const rows = Array.from(document.querySelectorAll("#data-table tr"));
-      const data = rows.map(tr =>
-        Array.from(tr.querySelectorAll("input")).map(input => input.value)
-      );
-      await fetch(apiUrl, {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: { "Content-Type": "application/json" }
+    async function updateData() {
+      const rows = Array.from(document.querySelectorAll("#data-table tbody tr"));
+      const values = rows.map(row =>
+        Array.from(row.querySelectorAll("input")).map(input => input.value.trim())
+      ).filter(row => row.some(cell => cell !== ''));
+
+      const res = await fetch(scriptURL, {
+        method: 'POST',
+        body: JSON.stringify(values),
+        headers: { 'Content-Type': 'application/json' }
       });
-      alert("保存しました！");
+
+      if (res.ok) {
+        alert('更新完了');
+        fetchData();
+      } else {
+        alert('更新失敗');
+      }
     }
 
-    loadData();
+    fetchData();
   </script>
 </body>
 </html>
