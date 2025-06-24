@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>詳細ページ</title>
+  <script src="https://unpkg.com/html5-qrcode"></script>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    #scanner { width: 100%; max-width: 400px; margin-top: 20px; }
+    input { width: 300px; font-size: 16px; padding: 5px; margin-bottom: 10px; }
+  </style>
+</head>
+<body>
+
+  <h2>選択内容の確認</h2>
+  <div id="userInfo">読み込み中...</div>
+
+  <h3>カメラスキャン</h3>
+  <div id="scanner"></div>
+
+  <label>スキャン結果（入力1）</label><br>
+  <input type="text" id="input1" onchange="lookupSheet2()"><br>
+
+  <label>対応結果（入力2）</label><br>
+  <input type="text" id="input2" readonly><br>
+
+  <script>
+    const apiBase = "https://script.google.com/macros/s/AKfycbwXWnnuBUo16qnmK68e24drpFdDzoh4xMsHbIm1mpL31gqMnQLBC_isUi8dyiKjKKKJ/exec";
+    const urlParams = new URLSearchParams(window.location.search);
+    const selectedName = urlParams.get("name");
+
+    // Sheet1のB列値を取得
+    fetch(apiBase + "?mode=sheet1")
+      .then(res => res.json())
+      .then(data => {
+        const record = data.find(item => item.name === selectedName);
+        const value = record ? record.value : "(該当なし)";
+        document.getElementById("userInfo").textContent =
+          `選択した名前：${selectedName} ／ 対応B列の値：${value}`;
+      });
+
+    // カメラ起動
+    const html5QrCode = new Html5Qrcode("scanner");
+    Html5Qrcode.getCameras().then(devices => {
+      if (devices && devices.length) {
+        html5QrCode.start(
+          { facingMode: "environment" }, // 背面カメラ
+          {
+            fps: 10,
+            qrbox: { width: 250, height: 250 }
+          },
+          qrCodeMessage => {
+            document.getElementById("input1").value = qrCodeMessage;
+            lookupSheet2();
+            html5QrCode.stop(); // 一旦停止（1回で止める場合）
+          }
+        );
+      }
+    }).catch(err => {
+      alert("カメラが見つかりません：" + err);
+    });
+
+    // Sheet2検索
+    function lookupSheet2() {
+      const key = document.getElementById("input1").value;
+      fetch(`${apiBase}?mode=sheet2&key=${encodeURIComponent(key)}`)
+        .then(res => res.text())
+        .then(data => {
+          document.getElementById("input2").value = data;
+        });
+    }
+  </script>
+
+</body>
+</html>
