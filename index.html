@@ -2,104 +2,41 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>明細管理</title>
+  <title>バーコードスキャナー</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://unpkg.com/@zxing/library@latest"></script>
   <style>
-    body {
-      font-family: sans-serif;
-      padding: 20px;
-    }
-    table {
-      border-collapse: collapse;
-      width: 100%;
-      margin-bottom: 15px;
-    }
-    th, td {
-      border: 1px solid #ccc;
-      padding: 4px;
-      text-align: center;
-    }
-    input {
-      width: 100%;
-      box-sizing: border-box;
-    }
-    button {
-      padding: 10px 20px;
-      font-size: 16px;
-    }
+    body { font-family: sans-serif; text-align: center; padding: 1em; }
+    video { width: 100%; max-width: 400px; border: 1px solid #ccc; }
+    #result { margin-top: 1em; font-size: 1.2em; color: green; }
   </style>
 </head>
 <body>
-  <h2>明細編集（最大20行）</h2>
-  <table id="data-table">
-    <thead>
-      <tr>
-        <th>日付（yyyy/mm/dd）</th>
-        <th>時間（hh:mm）</th>
-        <th>内容</th>
-        <th>担当</th>
-        <th>フロア</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
-  <button onclick="updateData()">更新</button>
+  <h2>バーコードをスキャンしてください</h2>
+  <video id="video"></video>
+  <p>結果: <span id="result">スキャン待ち</span></p>
 
   <script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbymcAHzl4974yzBzrtICE5QwbAtjYzSGCQzgnGVvSFXXxtgcj6EKYeH71X0xylegbe9dQ/exec';
+    const codeReader = new ZXing.BrowserMultiFormatReader();
+    const videoElement = document.getElementById('video');
+    const resultElement = document.getElementById('result');
 
-    async function fetchData() {
-      try {
-        const res = await fetch(scriptURL);
-        const data = await res.json();
-        const tbody = document.querySelector("#data-table tbody");
-        tbody.innerHTML = '';
+    codeReader
+      .listVideoInputDevices()
+      .then(videoInputDevices => {
+        const deviceId = videoInputDevices.length > 1
+          ? videoInputDevices[1].deviceId
+          : videoInputDevices[0].deviceId;
 
-        for (let i = 0; i < 20; i++) {
-          const row = document.createElement('tr');
-          for (let j = 0; j < 5; j++) {
-            const cell = document.createElement('td');
-            const input = document.createElement('input');
-            input.type = 'text';
-            input.value = data[i]?.[j] || '';
-            cell.appendChild(input);
-            row.appendChild(cell);
-          }
-          tbody.appendChild(row);
-        }
-      } catch (error) {
-        alert('データ取得に失敗しました。');
-        console.error(error);
-      }
-    }
-
-    async function updateData() {
-      const rows = Array.from(document.querySelectorAll("#data-table tbody tr"));
-      const values = rows.map(row =>
-        Array.from(row.querySelectorAll("input")).map(input => input.value.trim())
-      ).filter(row => row.some(cell => cell !== ''));
-
-      try {
-        const res = await fetch(scriptURL, {
-          method: 'POST',
-          body: JSON.stringify(values),
-          headers: {
-            'Content-Type': 'application/json'
+        codeReader.decodeFromVideoDevice(deviceId, videoElement, (result, err) => {
+          if (result) {
+            resultElement.textContent = result.getText();
           }
         });
-
-        if (res.ok) {
-          alert('更新が完了しました。');
-          fetchData();
-        } else {
-          alert('更新に失敗しました。');
-        }
-      } catch (error) {
-        alert('通信エラー：' + error);
-      }
-    }
-
-    fetchData();
+      })
+      .catch(err => {
+        resultElement.textContent = 'カメラアクセスエラー: ' + err;
+      });
   </script>
 </body>
 </html>
-
