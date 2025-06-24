@@ -2,41 +2,58 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>バーコードスキャナー</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script src="https://unpkg.com/@zxing/library@latest"></script>
+  <title>選択ページ</title>
   <style>
-    body { font-family: sans-serif; text-align: center; padding: 1em; }
-    video { width: 100%; max-width: 400px; border: 1px solid #ccc; }
-    #result { margin-top: 1em; font-size: 1.2em; color: green; }
+    body { font-family: sans-serif; padding: 30px; }
+    select { padding: 8px; font-size: 16px; }
+    button { padding: 8px 16px; font-size: 16px; margin-left: 10px; }
   </style>
 </head>
 <body>
-  <h2>バーコードをスキャンしてください</h2>
-  <video id="video"></video>
-  <p>結果: <span id="result">スキャン待ち</span></p>
+
+  <h2>スプレッドシートから選択</h2>
+
+  <select id="dropdown" onchange="enableNextButton()">
+    <option value="">-- 選択してください --</option>
+  </select>
+
+  <button id="nextButton" disabled onclick="goNext()">次へ</button>
 
   <script>
-    const codeReader = new ZXing.BrowserMultiFormatReader();
-    const videoElement = document.getElementById('video');
-    const resultElement = document.getElementById('result');
+    const apiUrl = 'https://script.google.com/macros/s/AKfycbwhzRr2r6sO1W1sjQHpuyuzNslck4hhmnxDEHQsxDHxATYN9umxCH9xXJ9GLpM9KVIk/exec';
 
-    codeReader
-      .listVideoInputDevices()
-      .then(videoInputDevices => {
-        const deviceId = videoInputDevices.length > 1
-          ? videoInputDevices[1].deviceId
-          : videoInputDevices[0].deviceId;
-
-        codeReader.decodeFromVideoDevice(deviceId, videoElement, (result, err) => {
-          if (result) {
-            resultElement.textContent = result.getText();
-          }
+    // プルダウンを読み込む
+    fetch(apiUrl)
+      .then(res => res.json())
+      .then(data => {
+        const dropdown = document.getElementById("dropdown");
+        data.forEach(item => {
+          const option = document.createElement("option");
+          option.value = item;
+          option.textContent = item;
+          dropdown.appendChild(option);
         });
       })
       .catch(err => {
-        resultElement.textContent = 'カメラアクセスエラー: ' + err;
+        alert("スプレッドシートからのデータ取得に失敗しました");
+        console.error(err);
       });
+
+    // 選択時にボタンを有効化
+    function enableNextButton() {
+      const dropdown = document.getElementById("dropdown");
+      const nextButton = document.getElementById("nextButton");
+      nextButton.disabled = (dropdown.value === "");
+    }
+
+    // ボタンクリック時の動作
+    function goNext() {
+      const selected = document.getElementById("dropdown").value;
+      alert("あなたが選んだのは: " + selected);
+      // 必要なら次のページへ遷移も可能：
+      // location.href = "next.html?user=" + encodeURIComponent(selected);
+    }
   </script>
+
 </body>
 </html>
