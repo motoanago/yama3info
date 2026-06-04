@@ -1,59 +1,430 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <title>選択ページ</title>
-  <style>
-    body { font-family: sans-serif; padding: 30px; }
-    select { padding: 8px; font-size: 16px; }
-    button { padding: 8px 16px; font-size: 16px; margin-left: 10px; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ｎｅｗビジネスフェア</title>
+<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght=700;800&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg-color: #fdf6ff;
+  --primary: #ffadd2;    /* ピンク */
+  --secondary: #95deea;  /* 青（水色） */
+  --accent: #fff3bf;     /* 黄色 */
+  --green: #c2f0af;      /* 緑 */
+  --purple: #d3bfff;     /* 紫 */
+  --text-color: #4a4a4a;
+  --border-color: #333;
+}
+
+body {
+  margin: 0;
+  font-family: 'M PLUS Rounded 1c', sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  overflow-x: hidden; /* 横はみ出しによるガタつきを完全に防止 */
+}
+
+/* 背景ドット */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: radial-gradient(#d1d1d1 2px, transparent 2px);
+  background-size: 35px 35px;
+  z-index: -1;
+}
+
+/* 背景装飾（5色アブストラクトアニメーション） */
+.deco { 
+  position: fixed; 
+  border-radius: 50%; 
+  z-index: -1; 
+  opacity: 0.5; 
+  filter: blur(80px); 
+}
+.deco-pink { width: 400px; height: 400px; background: var(--primary); top: -100px; left: -100px; animation: float-pink 25s infinite alternate ease-in-out; }
+.deco-blue { width: 500px; height: 500px; background: var(--secondary); bottom: -150px; right: -150px; animation: float-blue 28s infinite alternate ease-in-out; }
+.deco-yellow { width: 350px; height: 350px; background: var(--accent); top: 40vh; right: -100px; animation: float-yellow 22s infinite alternate ease-in-out; }
+.deco-green { width: 450px; height: 450px; background: var(--green); bottom: 30vh; left: -150px; animation: float-green 30s infinite alternate ease-in-out; }
+.deco-purple { width: 380px; height: 380px; background: var(--purple); top: -50px; right: 20vw; animation: float-purple 26s infinite alternate ease-in-out; }
+
+@keyframes float-pink { 0% { transform: translate(0, 0); } 100% { transform: translate(50vw, 20vh); } }
+@keyframes float-blue { 0% { transform: translate(0, 0); } 100% { transform: translate(-30vw, -50vh); } }
+@keyframes float-yellow { 0% { transform: translate(0, 0); } 100% { transform: translate(-40vw, -20vh); } }
+@keyframes float-green { 0% { transform: translate(0, 0); } 100% { transform: translate(35vw, -30vh); } }
+@keyframes float-purple { 0% { transform: translate(0, 0); } 100% { transform: translate(-20vw, 40vh); } }
+
+/* --- イントロ層 --- */
+#intro-layer {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background-color: var(--secondary); display: flex; align-items: center; justify-content: center;
+  z-index: 1000; transition: transform 1s cubic-bezier(0.85, 0, 0.15, 1); cursor: pointer;
+}
+.slide-up { transform: translateY(-100%); pointer-events: none; }
+.intro-content { display: flex; flex-direction: column; align-items: center; gap: 15px; width: 90%; max-width: 500px; }
+
+.timer-box {
+  background: var(--accent); border: 4px solid var(--border-color);
+  width: 120px; height: 120px; display: flex; align-items: center; justify-content: center;
+  border-radius: 30px; box-shadow: 8px 8px 0px var(--border-color);
+}
+#timer-count { font-size: 4rem; color: var(--border-color); font-weight: 800; }
+
+#intro-news-list {
+  background: #fff; border: 3px solid var(--border-color);
+  padding: 15px 25px; border-radius: 20px; box-shadow: 6px 6px 0px var(--border-color);
+  text-align: left; width: 100%; display: none;
+}
+.news-item { font-size: 0.85rem; font-weight: bold; margin-bottom: 5px; color: var(--text-color); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.news-item::before { content: "✨"; margin-right: 8px; }
+
+/* --- メインコンテンツ --- */
+nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 50px; }
+.logo { font-size: 28px; color: #ff7eb9; text-shadow: 2px 2px 0px #fff, 4px 4px 0px var(--border-color); }
+
+.hero { text-align: center; padding: 40px 20px; }
+.hero h1 { font-size: clamp(28px, 7vw, 48px); line-height: 1.4; margin: 0 0 10px 0; }
+.hero h1 span {
+  display: inline-block; background: var(--secondary);
+  padding: 5px 15px; border: 4px solid var(--border-color);
+  box-shadow: 6px 6px 0px var(--border-color);
+  transform: rotate(-2deg); margin: 5px;
+}
+.hero p { font-size: clamp(14px, 4vw, 16px); margin: 15px 0 0 0; }
+
+/* スライダー（全幅） */
+.slider-container {
+  position: relative; width: 100vw; height: 400px;
+  overflow: hidden; border-top: 4px solid var(--border-color); border-bottom: 4px solid var(--border-color);
+  background: #fff; left: 50%; right: 50%; margin-left: -50vw; margin-right: -50vw;
+}
+.slider-wrapper { display: flex; width: 400%; height: 100%; transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55); }
+.slide { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: clamp(20px, 5vw, 36px); font-weight: 800; text-align: center; padding: 0 20px; box-sizing: border-box; }
+.slide:nth-child(1), .slide:nth-child(4) { background-color: var(--accent); }
+.slide:nth-child(2) { background-color: var(--primary); }
+.slide:nth-child(3) { background-color: var(--green); }
+
+.slider-dots { display: flex; justify-content: center; gap: 15px; padding: 25px 0; }
+.dot { width: 15px; height: 15px; border: 3px solid var(--border-color); border-radius: 50%; cursor: pointer; background: #fff; }
+.dot.active { background: var(--primary); transform: scale(1.4); box-shadow: 3px 3px 0px var(--border-color); }
+
+/* コンテンツカードベース */
+.cards-vertical { display: flex; flex-direction: column; align-items: center; gap: 60px; padding: 40px 20px 100px; }
+
+/* 🌟 スクロール前：初期状態（PC基準） */
+.card, .form-card {
+  width: 95%; max-width: 950px; display: flex; align-items: stretch;
+  background: rgba(255, 255, 255, 0.85); border: 4px solid var(--border-color);
+  border-radius: 30px; box-shadow: 12px 12px 0px var(--border-color); overflow: hidden;
+  box-sizing: border-box;
+  opacity: 0;
+  transition: opacity 0.8s ease-out, transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.card.reverse { flex-direction: row-reverse; }
+
+/* 左右スライド初期位置（PC・タブレット横用） */
+.slide-in-left { transform: translateX(-100px); }
+.slide-in-right { transform: translateX(100px); }
+
+/* 画面内に入った時の共通クラス */
+.card.show, .form-card.show {
+  opacity: 1;
+  transform: translateX(0) translateY(0);
+}
+
+.card-text { flex: 1; padding: 40px; }
+.card h3 { font-size: clamp(1.5rem, 4vw, 2rem); margin-top: 0; border-bottom: 4px solid var(--accent); display: inline-block; }
+.card-image { flex: 1; min-height: 300px; background: #eee; }
+.card-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* NOTEリストのコンテナ（レスポンシブ用） */
+#note-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.note-item {
+  text-decoration: none; color: inherit; display: block; padding: 15px;
+  border: 3px solid var(--border-color); border-radius: 15px; background: #fff;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.note-item:hover { transform: translate(-4px, -4px); box-shadow: 4px 4px 0px var(--border-color); }
+
+.form-card { display: block; margin-bottom: 100px; width: 95%; }
+
+/* ========================================================
+   📱 レスポンシブ対応 (タブレット・スマホ用のレイアウト調整)
+   ======================================================== */
+
+/* 1. 中画面（タブレット・iPadなど：1024px以下） */
+@media (max-width: 1024px) {
+  nav { padding: 20px 30px; }
+  .card-text { padding: 30px; }
+  /* タブレットではNOTE記事を2列にしてスペースを有効活用 */
+  #note-list { grid-template-columns: 1fr 1fr; }
+  #note-list .note-item:last-child { grid-column: span 2; } /* 3つ目は横いっぱいに */
+  
+  /* タブレットは少し横幅が狭いのでアニメーションのズレを小ぶりに */
+  .slide-in-left { transform: translateX(-50px); }
+  .slide-in-right { transform: translateX(50px); }
+}
+
+/* 2. 小画面（スマホ・タブレット縦：768px以下） */
+@media (max-width: 768px) {
+  nav { padding: 15px 20px; }
+  .logo { font-size: 22px; }
+  
+  .slider-container { height: 28px0px; height: 300px; }
+  
+  /* 🌟 カードを縦並びに変更（画像が上、テキストが下） */
+  .card, .card.reverse { flex-direction: column; }
+  .card-image { min-height: 200px; max-height: 250px; order: -1; } /* 画像を必ず上に配置 */
+  .card-text { padding: 25px 20px; }
+  
+  /* スマホではNOTE記事は1列に戻す */
+  #note-list { grid-template-columns: 1fr; }
+  #note-list .note-item:last-child { grid-column: span 1; }
+  
+  /* 🌟 スマホ用スクロールアニメーション調整 */
+  /* 横にズレすぎると画面がはみ出るため、横移動を小さくし、少し下（下から上）からもどす動きをミックス */
+  .slide-in-left { transform: translateX(-30px) translateY(20px); }
+  .slide-in-right { transform: translateX(30px) translateY(20px); }
+  
+  .cards-vertical { gap: 40px; padding-bottom: 60px; }
+  .form-card { margin-bottom: 40px; }
+}
+</style>
 </head>
-<body>
+<body onclick="handleInteraction()">
 
-  <h2>受付を実行する名称を選択してください</h2>
+<div class="deco deco-pink"></div>
+<div class="deco deco-blue"></div>
+<div class="deco deco-yellow"></div>
+<div class="deco deco-green"></div>
+<div class="deco deco-purple"></div>
 
-  <select id="dropdown" onchange="enableNextButton()">
-    <option value="">-- 選択してください --</option>
-  </select>
+<div id="intro-layer">
+  <div class="intro-content">
+    <h1 style="color:#fff; text-shadow:4px 4px 0px var(--border-color); font-size:32px; margin:0;">イベント Loading...</h1>
+    <div class="timer-box">
+      <span id="timer-count">5</span>
+    </div>
+    <div id="intro-news-list">
+      <div style="font-size:0.7rem; color:#888; margin-bottom:8px; text-align:center;">--- LATEST NEWS ---</div>
+      <div id="news-container"></div>
+    </div>
+  </div>
+</div>
 
-  <button id="nextButton" disabled onclick="goNext()">次へ</button>
+<div id="main-content">
+  <nav>
+    <div class="logo">Ｎｅｗビジネスフェア×仙台山三 ✨</div>
+    <a href="#" style="font-weight:bold; text-decoration:none; color:var(--text-color); border:3px solid var(--border-color); padding:8px 20px; border-radius:50px; background:#fff; font-size: 14px;">Login</a>
+  </nav>
 
-  <script>
-    const apiUrl = 'https://script.google.com/macros/s/AKfycbwXWnnuBUo16qnmK68e24drpFdDzoh4xMsHbIm1mpL31gqMnQLBC_isUi8dyiKjKKKJ/exec';
+  <section class="hero">
+    <h1><span>Ｎｅｗ</span>ビジネス<span>フェア</span></h1>
+    <p>あなたの企業の欲しいものが見つかる！</p>
+  </section>
 
-    // プルダウンを読み込む
-    fetch(apiUrl)
-      .then(res => res.json())
-      .then(data => {
-        const dropdown = document.getElementById("dropdown");
-        data.forEach(item => {
-          const option = document.createElement("option");
-          option.value = item;
-          option.textContent = item;
-          dropdown.appendChild(option);
-        });
-      })
-      .catch(err => {
-        alert("スプレッドシートからのデータ取得に失敗しました");
-        console.error(err);
-      });
+  <div class="slider-container">
+    <div class="slider-wrapper" id="slider">
+      <div class="slide">☁️防災グッズとか</div>
+      <div class="slide">📦事務所レイアウトとか</div>
+      <div class="slide">🌐紹介コンテンツ</div>
+      <div class="slide">☁️目に見える</div>
+    </div>
+  </div>
+  <div class="slider-dots">
+    <div class="dot active" onclick="dotClick(0, event)"></div>
+    <div class="dot" onclick="dotClick(1, event)"></div>
+    <div class="dot" onclick="dotClick(2, event)"></div>
+  </div>
 
-    // 選択時にボタンを有効化
-    function enableNextButton() {
-      const dropdown = document.getElementById("dropdown");
-      const nextButton = document.getElementById("nextButton");
-      nextButton.disabled = (dropdown.value === "");
+  <section class="cards-vertical">
+    <div class="card slide-in-left">
+      <div class="card-text" style="width:100%">
+        <h3>NOTE投稿の最新３タイトルを表示</h3>
+        <div id="note-list"><p>読み込み中...</p></div>
+      </div>
+    </div>
+
+    <div class="card reverse slide-in-right">
+      <div class="card-text">
+        <h3>防災について</h3>
+        <p>ＢＣＰ対策を含め近年頻発している地震やクマ対策を含めて色々な視点から希望に寄り添った内容で提案します。</p>
+      </div>
+      <div class="card-image"><img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=600"></div>
+    </div>
+
+    <div class="card slide-in-left">
+      <div class="card-text">
+        <h3>飴ちゃん</h3>
+        <p>飴ちゃん食べ！</p>
+      </div>
+      <div class="card-image"><img src="https://images.unsplash.com/photo-1597733336794-12d05021d510?auto=format&fit=crop&q=80&w=600"></div>
+    </div>
+
+    <div class="card reverse slide-in-right">
+      <div class="card-text">
+        <h3>コンテンツ３</h3>
+        <p>記事ごとの詳細があるとその記事だけで満足されてしまう可能性があるので簡素なサブページを準備したい</p>
+      </div>
+      <div class="card-image"><img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc51?auto=format&fit=crop&q=80&w=600"></div>
+    </div>
+
+    <div class="form-card slide-in-left">
+      <div id="form-toggle-btn" onclick="toggleForm(event)" style="background:var(--secondary); padding:20px; border-bottom:4px solid var(--border-color); text-align:center; cursor:pointer; user-select:none; transition: background 0.2s;">
+        <h3 style="margin:0; display: inline-block; font-size: clamp(1.2rem, 3.5vw, 1.8rem);">💌 <span id="toggle-text">エントリーはこちら</span> <span id="toggle-arrow">▼</span></h3>
+      </div>
+      <div id="form-content" style="width:100%; height:0px; overflow:hidden; transition: height 0.5s cubic-bezier(0.25, 1, 0.5, 1);">
+        <div style="width:100%; height:700px;">
+          <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfcbB7PN8-55oXZuzzrZvOKuY7GycuNckMXhrBLLi5xFscBfQ/viewform?embedded=true" style="width:100%; height:100%; border:none;"></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+const NOTE_USER_ID = 'quiet_fowl9018'; 
+let isIntro = true, currentSlide = 0, timeLeft = 5, autoTimer, countdownInterval;
+
+const slider = document.getElementById('slider');
+const dots = document.querySelectorAll('.dot');
+const introLayer = document.getElementById('intro-layer');
+const timerDisplay = document.getElementById('timer-count');
+const newsContainer = document.getElementById('news-container');
+const introNewsList = document.getElementById('intro-news-list');
+
+function updateSliderUI() {
+  slider.style.transition = "transform 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55)";
+  slider.style.transform = `translateX(-${currentSlide * 25}%)`;
+  dots.forEach((d, i) => d.classList.toggle('active', i === (currentSlide % 3)));
+  if (currentSlide === 3) {
+    setTimeout(() => {
+      slider.style.transition = "none";
+      currentSlide = 0;
+      slider.style.transform = `translateX(0%)`;
+      dots[0].classList.add('active');
+    }, 600);
+  }
+}
+
+function exitIntro() {
+  clearInterval(countdownInterval);
+  introLayer.classList.add('slide-up');
+  isIntro = false;
+  startMainSliderTimer();
+}
+
+function startMainSliderTimer() {
+  clearInterval(autoTimer);
+  autoTimer = setInterval(() => { currentSlide++; updateSliderUI(); }, 5000);
+}
+
+function handleInteraction() { if (isIntro) exitIntro(); }
+
+function dotClick(idx, e) {
+  e.stopPropagation();
+  currentSlide = idx;
+  updateSliderUI();
+  startMainSliderTimer();
+}
+
+function toggleForm(e) {
+  e.stopPropagation(); 
+  
+  const formContent = document.getElementById('form-content');
+  const toggleText = document.getElementById('toggle-text');
+  const toggleArrow = document.getElementById('toggle-arrow');
+  const toggleBtn = document.getElementById('form-toggle-btn');
+
+  if (formContent.style.height === '0px' || formContent.style.height === '') {
+    formContent.style.height = '700px'; 
+    toggleText.innerText = 'エントリーフォームを閉じる';
+    toggleArrow.innerText = '▲';
+    toggleBtn.style.background = 'var(--primary)'; 
+  } else {
+    formContent.style.height = '0px'; 
+    toggleText.innerText = 'エントリーはこちら';
+    toggleArrow.innerText = '▼';
+    toggleBtn.style.background = 'var(--secondary)'; 
+  }
+}
+
+async function fetchNoteRSS() {
+  const rssUrl = `https://note.com/${NOTE_USER_ID}/rss`;
+  const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
+
+  try {
+    const response = await fetch(apiUrl);
+    const data = await response.json();
+    if (data.status !== 'ok') return;
+
+    const noteList = document.getElementById('note-list');
+    noteList.innerHTML = '';
+    newsContainer.innerHTML = '';
+    const now = new Date();
+    let newsCount = 0;
+
+    data.items.slice(0, 5).forEach((item) => {
+      const pubDate = new Date(item.pubDate);
+      const dateStr = pubDate.toLocaleDateString('ja-JP');
+      const diffDays = Math.ceil(Math.abs(now - pubDate) / (1000 * 60 * 60 * 24));
+      
+      if (diffDays <= 7 && newsCount < 3) {
+        newsContainer.innerHTML += `<div class="news-item">${dateStr} ${item.title}</div>`;
+        newsCount++;
+      }
+
+      noteList.innerHTML += `
+        <a href="${item.link}" target="_blank" class="note-item">
+          <div style="font-size:0.8rem; color:#888;">${dateStr}</div>
+          <div style="font-weight:bold; font-size:15px; margin-top:4px;">${item.title}</div>
+        </a>`;
+    });
+
+    if (newsCount > 0) {
+      introNewsList.style.display = "block";
     }
+  } catch (e) { console.error(e); }
+}
 
-    // ボタンクリック時の動作
-    function goNext() {
-      const selected = document.getElementById("dropdown").value;
-      alert("あなたが選んだのは: " + selected);
-      // 必要なら次のページへ遷移も可能：
-      // location.href = "next.html?user=" + encodeURIComponent(selected);
-    }
-  </script>
+// スクロールアニメーション制御
+function initScrollAnimation() {
+  const targetCards = document.querySelectorAll('.card, .form-card');
+  
+  const observerOptions = {
+    root: null,
+    rootMargin: '0px',
+    threshold: 0.1 // 少しでも画面に入ったらポヨンと動かす
+  };
 
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('show');
+      }
+    });
+  }, observerOptions);
+
+  targetCards.forEach(card => observer.observe(card));
+}
+
+window.onload = () => {
+  fetchNoteRSS();
+  initScrollAnimation();
+  countdownInterval = setInterval(() => {
+    timeLeft--;
+    if(timerDisplay) timerDisplay.innerText = timeLeft;
+    if (timeLeft <= 0) exitIntro();
+  }, 1000);
+};
+</script>
 </body>
 </html>
