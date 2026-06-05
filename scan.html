@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <style>
+      body {
+        font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', Meiryo, sans-serif;
+        background-color: #f4f6f9;
+        margin: 0;
+        padding: 20px;
+        color: #333;
+      }
+      .card {
+        background: #ffffff;
+        max-width: 450px;
+        margin: 0 auto;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        overflow: hidden;
+      }
+      .header {
+        background: #4A154B; /* スプレッドシートのヘッダー色に合わせた紫 */
+        color: #ffffff;
+        padding: 20px;
+        text-align: center;
+        font-size: 20px;
+        font-weight: bold;
+      }
+      .content {
+        padding: 24px;
+      }
+      .status-badge {
+        display: inline-block;
+        padding: 6px 16px;
+        border-radius: 20px;
+        font-weight: bold;
+        font-size: 14px;
+        margin-bottom: 20px;
+      }
+      .status-ok {
+        background-color: #e6f4ea;
+        color: #137333;
+      }
+      .status-ng {
+        background-color: #fce8e6;
+        color: #c5221f;
+      }
+      .info-group {
+        margin-bottom: 18px;
+        border-bottom: 1px solid #f0f0f0;
+        padding-bottom: 8px;
+      }
+      .label {
+        font-size: 12px;
+        color: #666;
+        margin-bottom: 4px;
+      }
+      .value {
+        font-size: 18px;
+        font-weight: bold;
+        color: #111;
+      }
+      .error-msg {
+        text-align: center;
+        color: #c5221f;
+        padding: 40px 20px;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+
+    <div class="card">
+      <div class="header">入場受付システム</div>
+      <div class="content">
+        
+        <? if (found) { ?>
+          <div style="text-align: center;">
+            <span class="status-badge status-ok">
+              <?= status === '承認済み' ? '確認OK（承認済み）' : '未承認のデータです' ?>
+            </span>
+          </div>
+
+          <div class="info-group">
+            <div class="label">氏名</div>
+            <div class="value"><?= name ?> 様</div>
+          </div>
+
+          <div class="info-group">
+            <div class="label">会社名</div>
+            <div class="value"><?= company || 'ー' ?></div>
+          </div>
+
+          <div class="info-group">
+            <div class="label">部署</div>
+            <div class="value"><?= dept || 'ー' ?></div>
+          </div>
+
+          <div class="info-group">
+            <div class="label">役職</div>
+            <div class="value"><?= position || 'ー' ?></div>
+          </div>
+
+        <? } else { ?>
+          <div class="error-msg">
+            該当する来場者データが見つかりません。<br>
+            もう一度やり直すか、手動で確認してください。
+          </div>
+        <? } ?>
+
+      </div>
+    </div>
+
+  </body>
+</html>
