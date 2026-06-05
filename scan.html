@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>明細確認</title>
+<title>詳細表示・商談メモ</title>
 <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
 <style>
 body { font-family:sans-serif; background:#f4f6f9; margin:0; padding:15px; color:#333; text-align:center; }
@@ -19,7 +19,9 @@ body { font-family:sans-serif; background:#f4f6f9; margin:0; padding:15px; color
 .value { font-size:18px; font-weight:bold; color:#111; }
 .btn { display:block; width:100%; padding:12px; background:#666; color:white; border:none; border-radius:6px; font-size:16px; font-weight:bold; cursor:pointer; margin-top:10px; }
 .memo-btn { background:#2196F3; }
-textarea { width:100%; height:220px; padding:10px; box-sizing:border-box; border:1px solid #ccc; border-radius:6px; font-size:15px; resize:vertical; }
+textarea { width:100%; height:120px; padding:10px; box-sizing:border-box; border:1px solid #ccc; border-radius:6px; font-size:15px; resize:vertical; }
+/* 1行入力ボックス用のスタイル */
+input[type="text"] { width:100%; padding:10px; box-sizing:border-box; border:1px solid #ccc; border-radius:6px; font-size:15px; }
 </style>
 </head>
 <body>
@@ -70,6 +72,11 @@ textarea { width:100%; height:220px; padding:10px; box-sizing:border-box; border
 <div class="info-group">
 <div class="label">商談メモ</div>
 <textarea id="memo"></textarea>
+</div>
+
+<div class="info-group">
+<div class="label">出店社名</div>
+<input type="text" id="exhibitor" placeholder="出店社名を入力してください">
 </div>
 
 <button class="btn memo-btn" onclick="saveMemo()">メモ登録</button>
@@ -204,6 +211,10 @@ function fetchUserData(qrValue){
             document.getElementById('memo').value =
                 data.memo || '';
 
+            // 【追加】すでに登録されている出店社名があれば表示
+            document.getElementById('exhibitor').value =
+                data.exhibitor || '';
+
         } else {
 
             alert('該当データが見つかりません');
@@ -222,6 +233,8 @@ function fetchUserData(qrValue){
 function saveMemo(){
     const memoButton = document.querySelector('.memo-btn');
     const memo = document.getElementById('memo').value.trim();
+    // 【追加】出店社名の値を取得
+    const exhibitor = document.getElementById('exhibitor').value.trim();
 
     if(!memo){
         alert('メモを入力してください');
@@ -236,20 +249,23 @@ function saveMemo(){
     memoButton.innerText = '保存中...';
     memoButton.style.background = '#ccc';
 
+    // URLパラメータに &exhibitor= を追加して送信
     fetch(
         `${GAS_API_URL}?action=saveMemo`
         + `&qr=${encodeURIComponent(currentQr)}`
         + `&memo=${encodeURIComponent(memo)}`
+        + `&exhibitor=${encodeURIComponent(exhibitor)}`
     )
     .then(res => res.json())
     .then(data => {
 
         if(data.success){
 
-            document.getElementById('memo').value =
-                data.memo || memo;
+            document.getElementById('memo').value = data.memo || memo;
+            // 返ってきた値をセット
+            document.getElementById('exhibitor').value = data.exhibitor || exhibitor;
 
-            alert('メモを登録しました');
+            alert('メモと出店社名を登録しました');
 
         } else {
 
@@ -263,7 +279,7 @@ function saveMemo(){
         alert('保存エラー\n\n' + err.message);
 
     })
-    // 成功・失敗に関わらず通信完了後にボタンを元に戻す
+    // 通信完了後にボタンを元に戻す
     .finally(() => {
         memoButton.disabled = false;
         memoButton.innerText = 'メモ登録';
@@ -274,8 +290,9 @@ function saveMemo(){
 function resetCamera(){
 
     document.getElementById('memo').value = '';
+    document.getElementById('exhibitor').value = ''; // 【追加】入力欄をクリア
 
-    // 次の読み取りに備えてボタンの状態を初期状態に戻す
+    // ボタンの状態を初期状態に戻す
     const memoButton = document.querySelector('.memo-btn');
     if (memoButton) {
         memoButton.disabled = false;
