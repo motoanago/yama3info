@@ -7,6 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght=700;800&display=swap" rel="stylesheet">
 
 <style>
+/* 🌟 デザインシステムとカラーパレットの定義 */
 :root {
   --bg-color: #fdf6ff;
   --primary: #ffadd2;    /* ピンク */
@@ -18,6 +19,7 @@
   --border-color: #333;
 }
 
+/* 🌟 基本的なリセットとレイアウト設定 */
 body {
   margin: 0;
   font-family: 'M PLUS Rounded 1c', sans-serif;
@@ -26,7 +28,7 @@ body {
   overflow-x: hidden; /* 横はみ出しによるガタつきを完全に防止 */
 }
 
-/* 背景ドット */
+/* 🌟 背景のポップなグリッドドット装飾 */
 body::before {
   content: "";
   position: fixed;
@@ -36,7 +38,7 @@ body::before {
   z-index: -1;
 }
 
-/* 背景装飾（5色アブストラクトアニメーション） */
+/* 🌟 背景を漂う5色のアブストラクトオーブ装飾 */
 .deco { 
   position: fixed; 
   border-radius: 50%; 
@@ -56,7 +58,7 @@ body::before {
 @keyframes float-green { 0% { transform: translate(0, 0); } 100% { transform: translate(35vw, -30vh); } }
 @keyframes float-purple { 0% { transform: translate(0, 0); } 100% { transform: translate(-20vw, 40vh); } }
 
-/* --- イントロ層 --- */
+/* 🌟 起動時のローディング・イントロ画面 */
 #intro-layer {
   position: fixed; top: 0; left: 0; width: 100%; height: 100%;
   background-color: var(--secondary); display: flex; align-items: center; justify-content: center;
@@ -65,6 +67,7 @@ body::before {
 .slide-up { transform: translateY(-100%); pointer-events: none; }
 .intro-content { display: flex; flex-direction: column; align-items: center; gap: 15px; width: 90%; max-width: 500px; }
 
+/* ポップで太枠なタイマーボックス */
 .timer-box {
   background: var(--accent); border: 4px solid var(--border-color);
   width: 120px; height: 120px; display: flex; align-items: center; justify-content: center;
@@ -72,6 +75,7 @@ body::before {
 }
 #timer-count { font-size: 4rem; color: var(--border-color); font-weight: 800; }
 
+/* イントロ画面内の新着ニュースカード */
 #intro-news-list {
   background: #fff; border: 3px solid var(--border-color);
   padding: 15px 25px; border-radius: 20px; box-shadow: 6px 6px 0px var(--border-color);
@@ -80,10 +84,11 @@ body::before {
 .news-item { font-size: 0.85rem; font-weight: bold; margin-bottom: 5px; color: var(--text-color); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .news-item::before { content: "✨"; margin-right: 8px; }
 
-/* --- メインコンテンツ --- */
+/* 🌟 ヘッダーナビゲーション */
 nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 50px; }
-.logo { font-size: 28px; color: #ff7eb9; text-shadow: 2px 2px 0px #fff, 4px 4px 0px var(--border-color); }
+.logo { font-size: 28px; color: #ff7eb9; text-shadow: 2px 2px 0px #fff, 4px 4px 0px var(--border-color); font-weight: 800; }
 
+/* ヒーローヘッダー */
 .hero { text-align: center; padding: 40px 20px; }
 .hero h1 { font-size: clamp(28px, 7vw, 48px); line-height: 1.4; margin: 0 0 10px 0; }
 .hero h1 span {
@@ -92,9 +97,9 @@ nav { display: flex; justify-content: space-between; align-items: center; paddin
   box-shadow: 6px 6px 0px var(--border-color);
   transform: rotate(-2deg); margin: 5px;
 }
-.hero p { font-size: clamp(14px, 4vw, 16px); margin: 15px 0 0 0; }
+.hero p { font-size: clamp(14px, 4vw, 16px); margin: 15px 0 0 0; font-weight: bold; }
 
-/* スライダー（全幅） */
+/* 🌟 メインスライダー（お知らせバナー） */
 .slider-container {
   position: relative; width: 100vw; height: 400px;
   overflow: hidden; border-top: 4px solid var(--border-color); border-bottom: 4px solid var(--border-color);
@@ -106,14 +111,15 @@ nav { display: flex; justify-content: space-between; align-items: center; paddin
 .slide:nth-child(2) { background-color: var(--primary); }
 .slide:nth-child(3) { background-color: var(--green); }
 
+/* スライダーインジケーター（ドット） */
 .slider-dots { display: flex; justify-content: center; gap: 15px; padding: 25px 0; }
 .dot { width: 15px; height: 15px; border: 3px solid var(--border-color); border-radius: 50%; cursor: pointer; background: #fff; }
 .dot.active { background: var(--primary); transform: scale(1.4); box-shadow: 3px 3px 0px var(--border-color); }
 
-/* コンテンツカードベース */
+/* 🌟 コンテンツカードの共通レイアウトとアニメーション設定 */
 .cards-vertical { display: flex; flex-direction: column; align-items: center; gap: 60px; padding: 40px 20px 100px; }
 
-/* 🌟 スクロール前：初期状態（PC基準） */
+/* スクロール前：非表示の初期状態 */
 .card, .form-card {
   width: 95%; max-width: 950px; display: flex; align-items: stretch;
   background: rgba(255, 255, 255, 0.85); border: 4px solid var(--border-color);
@@ -124,11 +130,11 @@ nav { display: flex; justify-content: space-between; align-items: center; paddin
 }
 .card.reverse { flex-direction: row-reverse; }
 
-/* 左右スライド初期位置（PC・タブレット横用） */
+/* 左右スライドの初期配置 */
 .slide-in-left { transform: translateX(-100px); }
 .slide-in-right { transform: translateX(100px); }
 
-/* 画面内に入った時の共通クラス */
+/* Intersection Observer用：表示が有効化されたときのスタイル */
 .card.show, .form-card.show {
   opacity: 1;
   transform: translateX(0) translateY(0);
@@ -139,14 +145,36 @@ nav { display: flex; justify-content: space-between; align-items: center; paddin
 .card-image { flex: 1; min-height: 300px; background: #eee; }
 .card-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
-/* NOTEリストのコンテナ（レスポンシブ用） */
+/* 🌟 リンク付きカード専用のネオブルータリズム・ポップホバーエフェクト */
+.card-link {
+  text-decoration: none;
+  color: inherit;
+}
+/* 画面内に入って表示された後のカードに対して、ホバー時の滑らかなアニメーションを設定 */
+.card.show.card-link {
+  transition: opacity 0.8s ease-out, 
+              transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), 
+              box-shadow 0.3s ease, 
+              background-color 0.3s ease;
+}
+/* マウスホバー時に斜め上にポコッと浮き出る3D演出 */
+.card.show.card-link:hover {
+  transform: translate(-10px, -10px);
+  box-shadow: 22px 22px 0px var(--border-color);
+  background: rgba(255, 255, 255, 0.95);
+}
+/* 詳しく見るバッジのホバー時微動 */
+.card.show.card-link:hover h3 span {
+  transform: rotate(-3deg) scale(1.05);
+}
+
+/* 🌟 NOTE一覧（RSS）のデザイン */
 #note-list {
   display: grid;
   grid-template-columns: 1fr;
   gap: 15px;
   margin-top: 20px;
 }
-
 .note-item {
   text-decoration: none; color: inherit; display: block; padding: 15px;
   border: 3px solid var(--border-color); border-radius: 15px; background: #fff;
@@ -178,7 +206,7 @@ nav { display: flex; justify-content: space-between; align-items: center; paddin
   nav { padding: 15px 20px; }
   .logo { font-size: 22px; }
   
-  .slider-container { height: 28px0px; height: 300px; }
+  .slider-container { height: 300px; }
   
   /* 🌟 カードを縦並びに変更（画像が上、テキストが下） */
   .card, .card.reverse { flex-direction: column; }
@@ -190,7 +218,7 @@ nav { display: flex; justify-content: space-between; align-items: center; paddin
   #note-list .note-item:last-child { grid-column: span 1; }
   
   /* 🌟 スマホ用スクロールアニメーション調整 */
-  /* 横にズレすぎると画面がはみ出るため、横移動を小さくし、少し下（下から上）からもどす動きをミックス */
+  /* 横にズレすぎると画面がはみ出るため、横移動を小さくし、少し下からもどす動きをミックス */
   .slide-in-left { transform: translateX(-30px) translateY(20px); }
   .slide-in-right { transform: translateX(30px) translateY(20px); }
   
@@ -201,12 +229,14 @@ nav { display: flex; justify-content: space-between; align-items: center; paddin
 </head>
 <body onclick="handleInteraction()">
 
+<!-- 🌟 背景のフローティングアブストラクトサークル -->
 <div class="deco deco-pink"></div>
 <div class="deco deco-blue"></div>
 <div class="deco deco-yellow"></div>
 <div class="deco deco-green"></div>
 <div class="deco deco-purple"></div>
 
+<!-- 🌟 イベントLoadingイントロ画面（5秒で自動またはクリックで即クローズ） -->
 <div id="intro-layer">
   <div class="intro-content">
     <h1 style="color:#fff; text-shadow:4px 4px 0px var(--border-color); font-size:32px; margin:0;">イベント Loading...</h1>
@@ -220,10 +250,11 @@ nav { display: flex; justify-content: space-between; align-items: center; paddin
   </div>
 </div>
 
+<!-- 🌟 メインコンテンツエリア -->
 <div id="main-content">
   <nav>
     <div class="logo">Ｎｅｗビジネスフェア×仙台山三 ✨</div>
-    <a href="#" style="font-weight:bold; text-decoration:none; color:var(--text-color); border:3px solid var(--border-color); padding:8px 20px; border-radius:50px; background:#fff; font-size: 14px;">Login</a>
+    <a href="#" style="font-weight:bold; text-decoration:none; color:var(--text-color); border:3px solid var(--border-color); padding:8px 20px; border-radius:50px; background:#fff; font-size: 14px; box-shadow: 3px 3px 0px var(--border-color); transition: transform 0.1s;" onmousedown="this.style.transform='translate(2px, 2px)'" onmouseup="this.style.transform='none'">Login</a>
   </nav>
 
   <section class="hero">
@@ -231,6 +262,7 @@ nav { display: flex; justify-content: space-between; align-items: center; paddin
     <p>あなたの企業の欲しいものが見つかる！</p>
   </section>
 
+  <!-- 🌟 スライダーカルーセル -->
   <div class="slider-container">
     <div class="slider-wrapper" id="slider">
       <div class="slide">☁️防災グッズとか</div>
@@ -245,7 +277,10 @@ nav { display: flex; justify-content: space-between; align-items: center; paddin
     <div class="dot" onclick="dotClick(2, event)"></div>
   </div>
 
+  <!-- 🌟 メインカードセクション（スクロール時に左右からポヨンと入る） -->
   <section class="cards-vertical">
+    
+    <!-- NOTE 投稿表示用（これ自体はリンク化せず内包された個別の記事が外部リンクになります） -->
     <div class="card slide-in-left">
       <div class="card-text" style="width:100%">
         <h3>NOTE投稿の最新３タイトルを表示</h3>
@@ -253,30 +288,49 @@ nav { display: flex; justify-content: space-between; align-items: center; paddin
       </div>
     </div>
 
-    <div class="card reverse slide-in-right">
+    <!-- カード２：防災について ➡️ content1.html へのリンク（ホバー付き） -->
+    <a href="content1.html" class="card reverse slide-in-right card-link">
       <div class="card-text">
-        <h3>防災について</h3>
+        <h3>
+          防災について
+          <span style="font-size: 0.9rem; background: var(--secondary); border: 2.5px solid var(--border-color); padding: 5px 12px; border-radius: 12px; margin-left: 10px; display: inline-block; box-shadow: 3px 3px 0px var(--border-color); font-weight: 800; transition: transform 0.2s;">
+            詳しく見る 👉
+          </span>
+        </h3>
         <p>ＢＣＰ対策を含め近年頻発している地震やクマ対策を含めて色々な視点から希望に寄り添った内容で提案します。</p>
       </div>
       <div class="card-image"><img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=600"></div>
-    </div>
+    </a>
 
-    <div class="card slide-in-left">
+    <!-- カード３：飴ちゃん ➡️ content2.html へのリンク（ホバー付き） -->
+    <a href="content2.html" class="card slide-in-left card-link">
       <div class="card-text">
-        <h3>飴ちゃん</h3>
-        <p>飴ちゃん食べ！</p>
+        <h3>
+          飴ちゃん
+          <span style="font-size: 0.9rem; background: var(--primary); border: 2.5px solid var(--border-color); padding: 5px 12px; border-radius: 12px; margin-left: 10px; display: inline-block; box-shadow: 3px 3px 0px var(--border-color); font-weight: 800; transition: transform 0.2s;">
+            詳しく見る 👉
+          </span>
+        </h3>
+        <p>飴ちゃん食べ！オフィスのコミュニケーションを円滑にする魔法のアイテム。私たちのこだわりと秘密を公開！</p>
       </div>
       <div class="card-image"><img src="https://images.unsplash.com/photo-1597733336794-12d05021d510?auto=format&fit=crop&q=80&w=600"></div>
-    </div>
+    </a>
 
-    <div class="card reverse slide-in-right">
+    <!-- カード４：コンテンツ３ ➡️ content3.html へのリンク（ホバー付き） -->
+    <a href="content3.html" class="card reverse slide-in-right card-link">
       <div class="card-text">
-        <h3>コンテンツ３</h3>
-        <p>記事ごとの詳細があるとその記事だけで満足されてしまう可能性があるので簡素なサブページを準備したい</p>
+        <h3>
+          コンテンツ３
+          <span style="font-size: 0.9rem; background: var(--purple); border: 2.5px solid var(--border-color); padding: 5px 12px; border-radius: 12px; margin-left: 10px; display: inline-block; box-shadow: 3px 3px 0px var(--border-color); font-weight: 800; transition: transform 0.2s;">
+            詳しく見る 👉
+          </span>
+        </h3>
+        <p>記事ごとの詳細があるとその記事だけで満足されてしまう可能性があるので、もっとワクワクする情報インフラの話を簡素にまとめました！</p>
       </div>
       <div class="card-image"><img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc51?auto=format&fit=crop&q=80&w=600"></div>
-    </div>
+    </a>
 
+    <!-- 🌟 アコーディオン型エントリーフォーム -->
     <div class="form-card slide-in-left">
       <div id="form-toggle-btn" onclick="toggleForm(event)" style="background:var(--secondary); padding:20px; border-bottom:4px solid var(--border-color); text-align:center; cursor:pointer; user-select:none; transition: background 0.2s;">
         <h3 style="margin:0; display: inline-block; font-size: clamp(1.2rem, 3.5vw, 1.8rem);">💌 <span id="toggle-text">エントリーはこちら</span> <span id="toggle-arrow">▼</span></h3>
@@ -301,6 +355,7 @@ const timerDisplay = document.getElementById('timer-count');
 const newsContainer = document.getElementById('news-container');
 const introNewsList = document.getElementById('intro-news-list');
 
+// 🌟 スライダーの描画更新処理
 function updateSliderUI() {
   slider.style.transition = "transform 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55)";
   slider.style.transform = `translateX(-${currentSlide * 25}%)`;
@@ -315,6 +370,7 @@ function updateSliderUI() {
   }
 }
 
+// 🌟 カウントダウン終了、もしくはクリックでメインページを表示
 function exitIntro() {
   clearInterval(countdownInterval);
   introLayer.classList.add('slide-up');
@@ -322,13 +378,16 @@ function exitIntro() {
   startMainSliderTimer();
 }
 
+// スライダーループ処理
 function startMainSliderTimer() {
   clearInterval(autoTimer);
   autoTimer = setInterval(() => { currentSlide++; updateSliderUI(); }, 5000);
 }
 
+// イントロ画面内のどこをクリックしてもクローズ可能
 function handleInteraction() { if (isIntro) exitIntro(); }
 
+// インジケータークリック時のスライド移動
 function dotClick(idx, e) {
   e.stopPropagation();
   currentSlide = idx;
@@ -336,6 +395,7 @@ function dotClick(idx, e) {
   startMainSliderTimer();
 }
 
+// エントリーフォームの開閉トグル
 function toggleForm(e) {
   e.stopPropagation(); 
   
@@ -357,6 +417,7 @@ function toggleForm(e) {
   }
 }
 
+/* 🌟 NOTEの最新投稿リスト（RSS）をJSONに変換してフェッチ */
 async function fetchNoteRSS() {
   const rssUrl = `https://note.com/${NOTE_USER_ID}/rss`;
   const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
@@ -377,11 +438,13 @@ async function fetchNoteRSS() {
       const dateStr = pubDate.toLocaleDateString('ja-JP');
       const diffDays = Math.ceil(Math.abs(now - pubDate) / (1000 * 60 * 60 * 24));
       
+      // 7日以内の新着投稿をイントロ最新ニュースに最大3件表示
       if (diffDays <= 7 && newsCount < 3) {
         newsContainer.innerHTML += `<div class="news-item">${dateStr} ${item.title}</div>`;
         newsCount++;
       }
 
+      // NOTEカードの中にリストアップ
       noteList.innerHTML += `
         <a href="${item.link}" target="_blank" class="note-item">
           <div style="font-size:0.8rem; color:#888;">${dateStr}</div>
@@ -395,14 +458,14 @@ async function fetchNoteRSS() {
   } catch (e) { console.error(e); }
 }
 
-// スクロールアニメーション制御
+/* 🌟 スクロールを検知してカードをふわっと＆ポヨンと浮き上がらせる */
 function initScrollAnimation() {
   const targetCards = document.querySelectorAll('.card, .form-card');
   
   const observerOptions = {
     root: null,
     rootMargin: '0px',
-    threshold: 0.1 // 少しでも画面に入ったらポヨンと動かす
+    threshold: 0.1 // 画面に10%入ったらトリガー
   };
 
   const observer = new IntersectionObserver((entries) => {
@@ -416,6 +479,7 @@ function initScrollAnimation() {
   targetCards.forEach(card => observer.observe(card));
 }
 
+// 🌟 ウィンドウロード時の初期化
 window.onload = () => {
   fetchNoteRSS();
   initScrollAnimation();
