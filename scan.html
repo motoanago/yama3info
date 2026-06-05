@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>入場受付確認</title>
+    <title>詳細表示</title>
     <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
     <style>
         body { font-family: sans-serif; background-color: #f4f6f9; margin: 0; padding: 15px; color: #333; text-align: center; }
@@ -50,7 +50,7 @@
 
 <script>
     // ★ここに新しくデプロイした「最新のGASのURL」を貼り付けてください
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbykOgqgoRjGRJRn-4CmPtxtZZadCOdMZCz0IJNJWEDiC3oGIk0cj72ThxBQXULGlyvk3Q/exec"; 
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbzDevjkkyKmeUkqFptBjCT9EcNOgloRzphpCcYP1KER2VTef7I54BbVt0oxOJIRrH-fzg/exec"; 
 
     const video = document.getElementById('video');
     const canvas = document.getElementById('canvas');
@@ -139,10 +139,12 @@
                     resetCamera();
                 }
             })
-.catch(err => {
-    alert("エラー内容：" + err.message);
-    console.log(err);
-});
+            .catch(err => {
+                alert(
+                  "通信エラー\n\n" +
+                  err.message
+                );
+            });
     }
 
     function resetCamera() {
