@@ -139,10 +139,10 @@
                     resetCamera();
                 }
             })
-            .catch(err => {
-                alert("通信エラーが発生しました。");
-                resetCamera();
-            });
+.catch(err => {
+    alert("エラー内容：" + err.message);
+    console.log(err);
+});
     }
 
     function resetCamera() {
