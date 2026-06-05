@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Ｎｅｗビジネスフェア</title>
 <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght=700;800&display=swap" rel="stylesheet">
 
@@ -26,6 +26,7 @@ body {
   background-color: var(--bg-color);
   color: var(--text-color);
   overflow-x: hidden; /* 横はみ出しによるガタつきを完全に防止 */
+  -webkit-text-size-adjust: 100%; /* iOSでの文字サイズ自動変化を防止 */
 }
 
 /* 🌟 背景のポップなグリッドドット装飾 */
@@ -65,7 +66,7 @@ body::before {
   z-index: 1000; transition: transform 1s cubic-bezier(0.85, 0, 0.15, 1); cursor: pointer;
 }
 .slide-up { transform: translateY(-100%); pointer-events: none; }
-.intro-content { display: flex; flex-direction: column; align-items: center; gap: 15px; width: 90%; max-width: 500px; }
+.intro-content { display: flex; flex-direction: column; align-items: center; gap: 15px; width: 90%; max-width: 500px; text-align: center; }
 
 /* ポップで太枠なタイマーボックス */
 .timer-box {
@@ -79,25 +80,25 @@ body::before {
 #intro-news-list {
   background: #fff; border: 3px solid var(--border-color);
   padding: 15px 25px; border-radius: 20px; box-shadow: 6px 6px 0px var(--border-color);
-  text-align: left; width: 100%; display: none;
+  text-align: left; width: 100%; box-sizing: border-box; display: none;
 }
 .news-item { font-size: 0.85rem; font-weight: bold; margin-bottom: 5px; color: var(--text-color); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .news-item::before { content: "✨"; margin-right: 8px; }
 
 /* 🌟 ヘッダーナビゲーション */
-nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 50px; }
-.logo { font-size: 28px; color: #ff7eb9; text-shadow: 2px 2px 0px #fff, 4px 4px 0px var(--border-color); font-weight: 800; }
+nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 50px; gap: 15px; }
+.logo { font-size: clamp(18px, 4vw, 28px); color: #ff7eb9; text-shadow: 2px 2px 0px #fff, 4px 4px 0px var(--border-color); font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 /* ヒーローヘッダー */
-.hero { text-align: center; padding: 40px 20px; }
-.hero h1 { font-size: clamp(28px, 7vw, 48px); line-height: 1.4; margin: 0 0 10px 0; }
+.hero { text-align: center; padding: 40px 20px; box-sizing: border-box; }
+.hero h1 { font-size: clamp(24px, 7vw, 48px); line-height: 1.5; margin: 0 0 10px 0; }
 .hero h1 span {
   display: inline-block; background: var(--secondary);
   padding: 5px 15px; border: 4px solid var(--border-color);
   box-shadow: 6px 6px 0px var(--border-color);
   transform: rotate(-2deg); margin: 5px;
 }
-.hero p { font-size: clamp(14px, 4vw, 16px); margin: 15px 0 0 0; font-weight: bold; }
+.hero p { font-size: clamp(13px, 3.5vw, 16px); margin: 15px 0 0 0; font-weight: bold; }
 
 /* 🌟 メインスライダー（お知らせバナー） */
 .slider-container {
@@ -106,7 +107,7 @@ nav { display: flex; justify-content: space-between; align-items: center; paddin
   background: #fff; left: 50%; right: 50%; margin-left: -50vw; margin-right: -50vw;
 }
 .slider-wrapper { display: flex; width: 400%; height: 100%; transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55); }
-.slide { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: clamp(20px, 5vw, 36px); font-weight: 800; text-align: center; padding: 0 20px; box-sizing: border-box; }
+.slide { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: clamp(18px, 5vw, 36px); font-weight: 800; text-align: center; padding: 0 20px; box-sizing: border-box; }
 .slide:nth-child(1), .slide:nth-child(4) { background-color: var(--accent); }
 .slide:nth-child(2) { background-color: var(--primary); }
 .slide:nth-child(3) { background-color: var(--green); }
@@ -117,22 +118,21 @@ nav { display: flex; justify-content: space-between; align-items: center; paddin
 .dot.active { background: var(--primary); transform: scale(1.4); box-shadow: 3px 3px 0px var(--border-color); }
 
 /* 🌟 コンテンツカードの共通レイアウトとアニメーション設定 */
-.cards-vertical { display: flex; flex-direction: column; align-items: center; gap: 60px; padding: 40px 20px 100px; }
+.cards-vertical { display: flex; flex-direction: column; align-items: center; gap: 60px; padding: 40px 20px 100px; box-sizing: border-box; }
 
 /* スクロール前：非表示の初期状態 */
 .card, .form-card {
-  width: 95%; max-width: 950px; display: flex; align-items: stretch;
+  width: 100%; max-width: 950px; display: flex; align-items: stretch;
   background: rgba(255, 255, 255, 0.85); border: 4px solid var(--border-color);
   border-radius: 30px; box-shadow: 12px 12px 0px var(--border-color); overflow: hidden;
-  box-sizing: border-box;
-  opacity: 0;
+  box-sizing: border-box; opacity: 0;
   transition: opacity 0.8s ease-out, transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 .card.reverse { flex-direction: row-reverse; }
 
 /* 左右スライドの初期配置 */
-.slide-in-left { transform: translateX(-100px); }
-.slide-in-right { transform: translateX(100px); }
+.slide-in-left { transform: translateX(-60px); }
+.slide-in-right { transform: translateX(60px); }
 
 /* Intersection Observer用：表示が有効化されたときのスタイル */
 .card.show, .form-card.show {
@@ -140,106 +140,132 @@ nav { display: flex; justify-content: space-between; align-items: center; paddin
   transform: translateX(0) translateY(0);
 }
 
-.card-text { flex: 1; padding: 40px; }
-.card h3 { font-size: clamp(1.5rem, 4vw, 2rem); margin-top: 0; border-bottom: 4px solid var(--accent); display: inline-block; }
-.card-image { flex: 1; min-height: 300px; background: #eee; }
+.card-text { flex: 1; padding: 40px; box-sizing: border-box; }
+.card h3 { font-size: clamp(1.3rem, 4vw, 2rem); margin-top: 0; border-bottom: 4px solid var(--accent); display: inline-block; padding-bottom: 5px; }
+.card h3 span.badge { font-size: 0.85rem; background: var(--secondary); border: 2.5px solid var(--border-color); padding: 4px 12px; border-radius: 12px; margin-left: 10px; display: inline-block; box-shadow: 3px 3px 0px var(--border-color); font-weight: 800; transition: transform 0.2s; white-space: nowrap; vertical-align: middle; }
+.card p { font-size: clamp(0.9rem, 2.5vw, 1.05rem); line-height: 1.6; margin-bottom: 0; }
+.card-image { flex: 1; min-height: 300px; background: #eee; overflow: hidden; }
 .card-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
 /* 🌟 リンク付きカード専用のネオブルータリズム・ポップホバーエフェクト */
-.card-link {
-  text-decoration: none;
-  color: inherit;
-}
-/* 画面内に入って表示された後のカードに対して、ホバー時の滑らかなアニメーションを設定 */
+.card-link { text-decoration: none; color: inherit; }
 .card.show.card-link {
   transition: opacity 0.8s ease-out, 
               transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), 
               box-shadow 0.3s ease, 
               background-color 0.3s ease;
 }
-/* マウスホバー時に斜め上にポコッと浮き出る3D演出 */
 .card.show.card-link:hover {
   transform: translate(-10px, -10px);
   box-shadow: 22px 22px 0px var(--border-color);
   background: rgba(255, 255, 255, 0.95);
 }
-/* 詳しく見るバッジのホバー時微動 */
-.card.show.card-link:hover h3 span {
-  transform: rotate(-3deg) scale(1.05);
-}
+.card.show.card-link:hover h3 span.badge { transform: rotate(-3deg) scale(1.05); }
 
 /* 🌟 NOTE一覧（RSS）のデザイン */
-#note-list {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 15px;
-  margin-top: 20px;
-}
-.note-item {
-  text-decoration: none; color: inherit; display: block; padding: 15px;
-  border: 3px solid var(--border-color); border-radius: 15px; background: #fff;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
+#note-list { display: grid; grid-template-columns: 1fr; gap: 15px; margin-top: 20px; width: 100%; }
+.note-item { text-decoration: none; color: inherit; display: block; padding: 15px; border: 3px solid var(--border-color); border-radius: 15px; background: #fff; transition: transform 0.2s, box-shadow 0.2s; box-sizing: border-box; }
 .note-item:hover { transform: translate(-4px, -4px); box-shadow: 4px 4px 0px var(--border-color); }
 
-.form-card { display: block; margin-bottom: 100px; width: 95%; }
+.form-card { display: block; margin-bottom: 100px; width: 100%; }
 
 /* ========================================================
-   📱 レスポンシブ対応 (タブレット・スマホ用のレイアウト調整)
+   🔒 追加：ログインモーダル（レスポンシブ完全対応）
+   ======================================================== */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 2000; opacity: 0; pointer-events: none;
+  transition: opacity 0.3s ease; padding: 20px; box-sizing: border-box;
+}
+.modal-overlay.active { opacity: 1; pointer-events: auto; }
+
+.modal-box {
+  background: #fff; border: 4px solid var(--border-color);
+  border-radius: 25px; padding: clamp(20px, 5vw, 35px); width: 100%; max-width: 380px;
+  box-shadow: 10px 10px 0px var(--border-color); text-align: center;
+  transform: scale(0.85); transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-sizing: border-box;
+}
+.modal-overlay.active .modal-box { transform: scale(1); }
+
+.modal-box h2 { margin-top: 0; font-size: clamp(1.3rem, 4vw, 1.6rem); color: var(--text-color); margin-bottom: 20px; }
+.modal-input {
+  width: 100%; padding: 14px; font-size: 1.3rem; text-align: center;
+  border: 3px solid var(--border-color); border-radius: 14px;
+  box-sizing: border-box; margin-bottom: 15px; font-family: inherit;
+  box-shadow: inset 2px 2px 5px rgba(0,0,0,0.08); -webkit-appearance: none;
+}
+.modal-input:focus { outline: none; background: #fffdf3; border-color: var(--text-color); }
+
+.modal-btns { display: flex; gap: 12px; justify-content: center; width: 100%; }
+.modal-btn {
+  flex: 1; font-family: inherit; font-weight: bold; border: 3px solid var(--border-color);
+  padding: 12px 16px; border-radius: 50px; cursor: pointer; font-size: clamp(13px, 3.5vw, 15px);
+  box-shadow: 3px 3px 0px var(--border-color); transition: transform 0.1s, box-shadow 0.1s;
+  white-space: nowrap; box-sizing: border-box;
+}
+.modal-btn:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0px var(--border-color); }
+.btn-submit { background: var(--purple); color: var(--text-color); }
+.btn-cancel { background: #eee; color: var(--text-color); }
+.error-msg { color: #ff5c5c; font-size: 0.85rem; font-weight: bold; margin-bottom: 15px; display: none; }
+
+/* ========================================================
+   📱 レスポンシブメディアクエリ (タブレット・スマホ調整)
    ======================================================== */
 
 /* 1. 中画面（タブレット・iPadなど：1024px以下） */
 @media (max-width: 1024px) {
   nav { padding: 20px 30px; }
   .card-text { padding: 30px; }
-  /* タブレットではNOTE記事を2列にしてスペースを有効活用 */
   #note-list { grid-template-columns: 1fr 1fr; }
-  #note-list .note-item:last-child { grid-column: span 2; } /* 3つ目は横いっぱいに */
+  #note-list .note-item:last-child { grid-column: span 2; }
   
-  /* タブレットは少し横幅が狭いのでアニメーションのズレを小ぶりに */
-  .slide-in-left { transform: translateX(-50px); }
-  .slide-in-right { transform: translateX(50px); }
+  .slide-in-left { transform: translateX(-40px); }
+  .slide-in-right { transform: translateX(40px); }
 }
 
-/* 2. 小画面（スマホ・タブレット縦：768px以下） */
+/* 2. 小画面（スマートフォン・縦持ちタブレット：768px以下） */
 @media (max-width: 768px) {
   nav { padding: 15px 20px; }
-  .logo { font-size: 22px; }
+  .logo { text-shadow: 1.5px 1.5px 0px #fff, 3px 3px 0px var(--border-color); }
   
-  .slider-container { height: 300px; }
+  .slider-container { height: 280px; }
   
-  /* 🌟 カードを縦並びに変更（画像が上、テキストが下） */
-  .card, .card.reverse { flex-direction: column; }
-  .card-image { min-height: 200px; max-height: 250px; order: -1; } /* 画像を必ず上に配置 */
+  /* 🌟 カードを縦並びに変更して横幅を100%安全に */
+  .card, .card.reverse { flex-direction: column; align-items: stretch; }
+  .card-image { min-height: 180px; max-height: 220px; order: -1; } /* 画像を常にトップに配置 */
   .card-text { padding: 25px 20px; }
+  .card h3 { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; border-bottom: none; }
+  .card h3 span.badge { margin-left: 0; }
   
-  /* スマホではNOTE記事は1列に戻す */
+  /* スマホでのNOTE記事は1列ストレートに */
   #note-list { grid-template-columns: 1fr; }
   #note-list .note-item:last-child { grid-column: span 1; }
   
-  /* 🌟 スマホ用スクロールアニメーション調整 */
-  /* 横にズレすぎると画面がはみ出るため、横移動を小さくし、少し下からもどす動きをミックス */
-  .slide-in-left { transform: translateX(-30px) translateY(20px); }
-  .slide-in-right { transform: translateX(30px) translateY(20px); }
+  /* スマホ用スクロールアニメーション：はみ出しを防ぐため横揺れを抑え、下からの湧き上がりを強化 */
+  .slide-in-left { transform: translateX(-15px) translateY(25px); }
+  .slide-in-right { transform: translateX(15px) translateY(25px); }
   
-  .cards-vertical { gap: 40px; padding-bottom: 60px; }
+  .cards-vertical { gap: 40px; padding: 20px 15px 60px; }
   .form-card { margin-bottom: 40px; }
+  
+  /* スマホホバーの誤動作・浮き上がり過ぎ防止（タップ時の制御） */
+  .card.show.card-link:hover { transform: translate(-4px, -4px); box-shadow: 16px 16px 0px var(--border-color); }
 }
 </style>
 </head>
 <body onclick="handleInteraction()">
 
-<!-- 🌟 背景のフローティングアブストラクトサークル -->
 <div class="deco deco-pink"></div>
 <div class="deco deco-blue"></div>
 <div class="deco deco-yellow"></div>
 <div class="deco deco-green"></div>
 <div class="deco deco-purple"></div>
 
-<!-- 🌟 イベントLoadingイントロ画面（5秒で自動またはクリックで即クローズ） -->
 <div id="intro-layer">
   <div class="intro-content">
-    <h1 style="color:#fff; text-shadow:4px 4px 0px var(--border-color); font-size:32px; margin:0;">イベント Loading...</h1>
+    <h1 style="color:#fff; text-shadow:4px 4px 0px var(--border-color); font-size:clamp(24px, 6vw, 32px); margin:0;">イベント Loading...</h1>
     <div class="timer-box">
       <span id="timer-count">5</span>
     </div>
@@ -250,11 +276,10 @@ nav { display: flex; justify-content: space-between; align-items: center; paddin
   </div>
 </div>
 
-<!-- 🌟 メインコンテンツエリア -->
 <div id="main-content">
   <nav>
     <div class="logo">Ｎｅｗビジネスフェア×仙台山三 ✨</div>
-    <a href="#" style="font-weight:bold; text-decoration:none; color:var(--text-color); border:3px solid var(--border-color); padding:8px 20px; border-radius:50px; background:#fff; font-size: 14px; box-shadow: 3px 3px 0px var(--border-color); transition: transform 0.1s;" onmousedown="this.style.transform='translate(2px, 2px)'" onmouseup="this.style.transform='none'">Login</a>
+    <a href="javascript:void(0)" onclick="openLoginModal(event)" style="font-weight:bold; text-decoration:none; color:var(--text-color); border:3px solid var(--border-color); padding:8px 18px; border-radius:50px; background:#fff; font-size: 13px; box-shadow: 3px 3px 0px var(--border-color); transition: transform 0.1s; white-space: nowrap;" onmousedown="this.style.transform='translate(2px, 2px)'" onmouseup="this.style.transform='none'">Login</a>
   </nav>
 
   <section class="hero">
@@ -262,7 +287,6 @@ nav { display: flex; justify-content: space-between; align-items: center; paddin
     <p>あなたの企業の欲しいものが見つかる！</p>
   </section>
 
-  <!-- 🌟 スライダーカルーセル -->
   <div class="slider-container">
     <div class="slider-wrapper" id="slider">
       <div class="slide">☁️防災グッズとか</div>
@@ -277,63 +301,42 @@ nav { display: flex; justify-content: space-between; align-items: center; paddin
     <div class="dot" onclick="dotClick(2, event)"></div>
   </div>
 
-  <!-- 🌟 メインカードセクション（スクロール時に左右からポヨンと入る） -->
   <section class="cards-vertical">
     
-    <!-- NOTE 投稿表示用（これ自体はリンク化せず内包された個別の記事が外部リンクになります） -->
     <div class="card slide-in-left">
-      <div class="card-text" style="width:100%">
-        <h3>NOTE投稿の最新３タイトルを表示</h3>
+      <div class="card-text">
+        <h3 style="border-bottom: 4px solid var(--accent);">NOTE投稿の最新３タイトルを表示</h3>
         <div id="note-list"><p>読み込み中...</p></div>
       </div>
     </div>
 
-    <!-- カード２：防災について ➡️ content1.html へのリンク（ホバー付き） -->
     <a href="content1.html" class="card reverse slide-in-right card-link">
       <div class="card-text">
-        <h3>
-          防災について
-          <span style="font-size: 0.9rem; background: var(--secondary); border: 2.5px solid var(--border-color); padding: 5px 12px; border-radius: 12px; margin-left: 10px; display: inline-block; box-shadow: 3px 3px 0px var(--border-color); font-weight: 800; transition: transform 0.2s;">
-            詳しく見る 👉
-          </span>
-        </h3>
+        <h3>防災について<span class="badge" style="background: var(--secondary);">詳しく見る 👉</span></h3>
         <p>ＢＣＰ対策を含め近年頻発している地震やクマ対策を含めて色々な視点から希望に寄り添った内容で提案します。</p>
       </div>
       <div class="card-image"><img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=600"></div>
     </a>
 
-    <!-- カード３：飴ちゃん ➡️ content2.html へのリンク（ホバー付き） -->
     <a href="content2.html" class="card slide-in-left card-link">
       <div class="card-text">
-        <h3>
-          飴ちゃん
-          <span style="font-size: 0.9rem; background: var(--primary); border: 2.5px solid var(--border-color); padding: 5px 12px; border-radius: 12px; margin-left: 10px; display: inline-block; box-shadow: 3px 3px 0px var(--border-color); font-weight: 800; transition: transform 0.2s;">
-            詳しく見る 👉
-          </span>
-        </h3>
+        <h3>飴ちゃん<span class="badge" style="background: var(--primary);">詳しく見る 👉</span></h3>
         <p>飴ちゃん食べ！オフィスのコミュニケーションを円滑にする魔法のアイテム。私たちのこだわりと秘密を公開！</p>
       </div>
       <div class="card-image"><img src="https://images.unsplash.com/photo-1597733336794-12d05021d510?auto=format&fit=crop&q=80&w=600"></div>
     </a>
 
-    <!-- カード４：コンテンツ３ ➡️ content3.html へのリンク（ホバー付き） -->
     <a href="content3.html" class="card reverse slide-in-right card-link">
       <div class="card-text">
-        <h3>
-          コンテンツ３
-          <span style="font-size: 0.9rem; background: var(--purple); border: 2.5px solid var(--border-color); padding: 5px 12px; border-radius: 12px; margin-left: 10px; display: inline-block; box-shadow: 3px 3px 0px var(--border-color); font-weight: 800; transition: transform 0.2s;">
-            詳しく見る 👉
-          </span>
-        </h3>
+        <h3>コンテンツ３<span class="badge" style="background: var(--purple);">詳しく見る 👉</span></h3>
         <p>記事ごとの詳細があるとその記事だけで満足されてしまう可能性があるので、もっとワクワクする情報インフラの話を簡素にまとめました！</p>
       </div>
       <div class="card-image"><img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc51?auto=format&fit=crop&q=80&w=600"></div>
     </a>
 
-    <!-- 🌟 アコーディオン型エントリーフォーム -->
     <div class="form-card slide-in-left">
       <div id="form-toggle-btn" onclick="toggleForm(event)" style="background:var(--secondary); padding:20px; border-bottom:4px solid var(--border-color); text-align:center; cursor:pointer; user-select:none; transition: background 0.2s;">
-        <h3 style="margin:0; display: inline-block; font-size: clamp(1.2rem, 3.5vw, 1.8rem);">💌 <span id="toggle-text">エントリーはこちら</span> <span id="toggle-arrow">▼</span></h3>
+        <h3 style="margin:0; display: inline-block; font-size: clamp(1.1rem, 3.5vw, 1.8rem);">💌 <span id="toggle-text">エントリーはこちら</span> <span id="toggle-arrow">▼</span></h3>
       </div>
       <div id="form-content" style="width:100%; height:0px; overflow:hidden; transition: height 0.5s cubic-bezier(0.25, 1, 0.5, 1);">
         <div style="width:100%; height:700px;">
@@ -342,6 +345,18 @@ nav { display: flex; justify-content: space-between; align-items: center; paddin
       </div>
     </div>
   </section>
+</div>
+
+<div id="login-modal" class="modal-overlay" onclick="closeLoginModal()">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <h2>🔒 パスワード入力</h2>
+    <input type="password" id="pass-input" class="modal-input" placeholder="••••" maxlength="10">
+    <div id="error-message" class="error-msg">パスワードが違います</div>
+    <div class="modal-btns">
+      <button class="modal-btn btn-cancel" onclick="closeLoginModal()">閉じる</button>
+      <button class="modal-btn btn-submit" onclick="checkPassword()">ログイン</button>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -355,7 +370,7 @@ const timerDisplay = document.getElementById('timer-count');
 const newsContainer = document.getElementById('news-container');
 const introNewsList = document.getElementById('intro-news-list');
 
-// 🌟 スライダーの描画更新処理
+// スライダーの描画更新処理
 function updateSliderUI() {
   slider.style.transition = "transform 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55)";
   slider.style.transform = `translateX(-${currentSlide * 25}%)`;
@@ -370,7 +385,6 @@ function updateSliderUI() {
   }
 }
 
-// 🌟 カウントダウン終了、もしくはクリックでメインページを表示
 function exitIntro() {
   clearInterval(countdownInterval);
   introLayer.classList.add('slide-up');
@@ -378,16 +392,13 @@ function exitIntro() {
   startMainSliderTimer();
 }
 
-// スライダーループ処理
 function startMainSliderTimer() {
   clearInterval(autoTimer);
   autoTimer = setInterval(() => { currentSlide++; updateSliderUI(); }, 5000);
 }
 
-// イントロ画面内のどこをクリックしてもクローズ可能
 function handleInteraction() { if (isIntro) exitIntro(); }
 
-// インジケータークリック時のスライド移動
 function dotClick(idx, e) {
   e.stopPropagation();
   currentSlide = idx;
@@ -395,10 +406,8 @@ function dotClick(idx, e) {
   startMainSliderTimer();
 }
 
-// エントリーフォームの開閉トグル
 function toggleForm(e) {
   e.stopPropagation(); 
-  
   const formContent = document.getElementById('form-content');
   const toggleText = document.getElementById('toggle-text');
   const toggleArrow = document.getElementById('toggle-arrow');
@@ -417,7 +426,6 @@ function toggleForm(e) {
   }
 }
 
-/* 🌟 NOTEの最新投稿リスト（RSS）をJSONに変換してフェッチ */
 async function fetchNoteRSS() {
   const rssUrl = `https://note.com/${NOTE_USER_ID}/rss`;
   const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
@@ -438,17 +446,15 @@ async function fetchNoteRSS() {
       const dateStr = pubDate.toLocaleDateString('ja-JP');
       const diffDays = Math.ceil(Math.abs(now - pubDate) / (1000 * 60 * 60 * 24));
       
-      // 7日以内の新着投稿をイントロ最新ニュースに最大3件表示
       if (diffDays <= 7 && newsCount < 3) {
         newsContainer.innerHTML += `<div class="news-item">${dateStr} ${item.title}</div>`;
         newsCount++;
       }
 
-      // NOTEカードの中にリストアップ
       noteList.innerHTML += `
         <a href="${item.link}" target="_blank" class="note-item">
           <div style="font-size:0.8rem; color:#888;">${dateStr}</div>
-          <div style="font-weight:bold; font-size:15px; margin-top:4px;">${item.title}</div>
+          <div style="font-weight:bold; font-size:14px; margin-top:4px;">${item.title}</div>
         </a>`;
     });
 
@@ -458,15 +464,9 @@ async function fetchNoteRSS() {
   } catch (e) { console.error(e); }
 }
 
-/* 🌟 スクロールを検知してカードをふわっと＆ポヨンと浮き上がらせる */
 function initScrollAnimation() {
   const targetCards = document.querySelectorAll('.card, .form-card');
-  
-  const observerOptions = {
-    root: null,
-    rootMargin: '0px',
-    threshold: 0.1 // 画面に10%入ったらトリガー
-  };
+  const observerOptions = { root: null, rootMargin: '0px', threshold: 0.05 };
 
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
@@ -479,7 +479,42 @@ function initScrollAnimation() {
   targetCards.forEach(card => observer.observe(card));
 }
 
-// 🌟 ウィンドウロード時の初期化
+// 🔒 ログイン認証スクリプト
+const CORRECT_PASSWORD = "1234"; 
+
+function openLoginModal(e) {
+  e.stopPropagation();
+  const modal = document.getElementById('login-modal');
+  const input = document.getElementById('pass-input');
+  const errorMsg = document.getElementById('error-message');
+  
+  input.value = "";
+  errorMsg.style.display = "none";
+  modal.classList.add('active');
+  
+  setTimeout(() => input.focus(), 150);
+}
+
+function closeLoginModal() {
+  document.getElementById('login-modal').classList.remove('active');
+}
+
+function checkPassword() {
+  const userInput = document.getElementById('pass-input').value;
+  const errorMsg = document.getElementById('error-message');
+  
+  if (userInput === CORRECT_PASSWORD) {
+    window.location.href = "scan.html";
+  } else {
+    errorMsg.style.display = "block";
+    document.getElementById('pass-input').focus();
+  }
+}
+
+document.getElementById('pass-input').addEventListener('keypress', function(e) {
+  if (e.key === 'Enter') checkPassword();
+});
+
 window.onload = () => {
   fetchNoteRSS();
   initScrollAnimation();
