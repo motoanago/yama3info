@@ -214,20 +214,27 @@ function fetchUserData(qrValue){
     })
     .catch(function(err){
 
-        alert('通信エラー\\n\\n' + err.message);
+        alert('通信エラー\n\n' + err.message);
 
     });
 }
 
 function saveMemo(){
-
-    const memo =
-        document.getElementById('memo').value.trim();
+    const memoButton = document.querySelector('.memo-btn');
+    const memo = document.getElementById('memo').value.trim();
 
     if(!memo){
         alert('メモを入力してください');
         return;
     }
+
+    // すでに通信中の場合は処理をスキップ
+    if (memoButton.disabled) return;
+
+    // ボタンをグレーアウトし、テキストを変更
+    memoButton.disabled = true;
+    memoButton.innerText = '保存中...';
+    memoButton.style.background = '#ccc';
 
     fetch(
         `${GAS_API_URL}?action=saveMemo`
@@ -253,14 +260,28 @@ function saveMemo(){
     })
     .catch(function(err){
 
-        alert('保存エラー\\n\\n' + err.message);
+        alert('保存エラー\n\n' + err.message);
 
+    })
+    // 成功・失敗に関わらず通信完了後にボタンを元に戻す
+    .finally(() => {
+        memoButton.disabled = false;
+        memoButton.innerText = 'メモ登録';
+        memoButton.style.background = '#2196F3';
     });
 }
 
 function resetCamera(){
 
     document.getElementById('memo').value = '';
+
+    // 次の読み取りに備えてボタンの状態を初期状態に戻す
+    const memoButton = document.querySelector('.memo-btn');
+    if (memoButton) {
+        memoButton.disabled = false;
+        memoButton.innerText = 'メモ登録';
+        memoButton.style.background = '#2196F3';
+    }
 
     history.pushState(
         null,
