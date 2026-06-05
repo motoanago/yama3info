@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ITインフラとクラウド環境 ｜ Ｎｅｗビジネスフェア</title>
+<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght=700;800&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg-color: #fdf6ff;
+  --primary: #ffadd2;    /* ピンク */
+  --secondary: #95deea;  /* 青（水色） */
+  --accent: #fff3bf;     /* 黄色 */
+  --green: #c2f0af;      /* 緑 */
+  --purple: #d3bfff;     /* 紫 */
+  --text-color: #4a4a4a;
+  --border-color: #333;
+}
+
+body {
+  margin: 0;
+  font-family: 'M PLUS Rounded 1c', sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  overflow-x: hidden;
+}
+
+/* 背景ドット */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: radial-gradient(#d1d1d1 2px, transparent 2px);
+  background-size: 35px 35px;
+  z-index: -1;
+}
+
+/* 背景装飾（5色アブストラクトアニメーション） */
+.deco { 
+  position: fixed; 
+  border-radius: 50%; 
+  z-index: -1; 
+  opacity: 0.5; 
+  filter: blur(80px); 
+}
+.deco-pink { width: 400px; height: 400px; background: var(--primary); top: -100px; left: -100px; animation: float-pink 25s infinite alternate ease-in-out; }
+.deco-blue { width: 500px; height: 500px; background: var(--secondary); bottom: -150px; right: -150px; animation: float-blue 28s infinite alternate ease-in-out; }
+.deco-yellow { width: 350px; height: 350px; background: var(--accent); top: 40vh; right: -100px; animation: float-yellow 22s infinite alternate ease-in-out; }
+.deco-green { width: 450px; height: 450px; background: var(--green); bottom: 30vh; left: -150px; animation: float-green 30s infinite alternate ease-in-out; }
+.deco-purple { width: 380px; height: 380px; background: var(--purple); top: -50px; right: 20vw; animation: float-purple 26s infinite alternate ease-in-out; }
+
+@keyframes float-pink { 0% { transform: translate(0, 0); } 100% { transform: translate(50vw, 20vh); } }
+@keyframes float-blue { 0% { transform: translate(0, 0); } 100% { transform: translate(-30vw, -50vh); } }
+@keyframes float-yellow { 0% { transform: translate(-40vw, -20vh); } 100% { transform: translate(0, 0); } }
+@keyframes float-green { 0% { transform: translate(0, 0); } 100% { transform: translate(35vw, -30vh); } }
+@keyframes float-purple { 0% { transform: translate(0, 0); } 100% { transform: translate(-20vw, 40vh); } }
+
+/* ナビゲーション */
+nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 50px; }
+.logo { font-size: 28px; color: #ff7eb9; text-shadow: 2px 2px 0px #fff, 4px 4px 0px var(--border-color); text-decoration: none; }
+
+/* ヒーローセクション */
+.hero { text-align: center; padding: 40px 20px; }
+.hero h1 { font-size: clamp(24px, 6vw, 42px); line-height: 1.4; margin: 0 0 10px 0; }
+.hero h1 span {
+  display: inline-block; background: var(--primary);
+  padding: 5px 15px; border: 4px solid var(--border-color);
+  box-shadow: 6px 6px 0px var(--border-color);
+  transform: rotate(-1deg); margin: 5px;
+}
+.hero p { font-size: clamp(14px, 4vw, 18px); margin: 15px 0 0 0; font-weight: bold; }
+
+/* コンテンツカードベース */
+.cards-vertical { display: flex; flex-direction: column; align-items: center; gap: 60px; padding: 40px 20px 100px; }
+
+.card {
+  width: 95%; max-width: 950px; display: flex; align-items: stretch;
+  background: rgba(255, 255, 255, 0.85); border: 4px solid var(--border-color);
+  border-radius: 30px; box-shadow: 12px 12px 0px var(--border-color); overflow: hidden;
+  box-sizing: border-box;
+  opacity: 0;
+  transition: opacity 0.8s ease-out, transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.card.reverse { flex-direction: row-reverse; }
+
+/* 左右スライド初期位置 */
+.slide-in-left { transform: translateX(-100px); }
+.slide-in-right { transform: translateX(100px); }
+
+.card.show {
+  opacity: 1;
+  transform: translateX(0) translateY(0);
+}
+
+.card-text { flex: 1; padding: 40px; }
+.card h3 { font-size: clamp(1.4rem, 4vw, 1.8rem); margin-top: 0; border-bottom: 4px solid var(--accent); display: inline-block; margin-bottom: 15px; }
+.card h3.blue-line { border-bottom: 4px solid var(--secondary); }
+.card h3.purple-line { border-bottom: 4px solid var(--purple); }
+.card p { font-size: 16px; line-height: 1.6; margin: 0 0 15px 0; }
+
+.card-image { flex: 1; min-height: 300px; background: #eee; }
+.card-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* リストスタイル（カード内用） */
+.point-list { padding-left: 20px; margin: 0; }
+.point-list li { margin-bottom: 8px; font-weight: bold; }
+
+/* ページ下部ボタン */
+.btn-area { text-align: center; margin-bottom: 100px; }
+.back-btn {
+  display: inline-block; font-weight: bold; text-decoration: none; color: var(--text-color); 
+  border: 4px solid var(--border-color); padding: 15px 40px; border-radius: 50px; 
+  background: var(--green); font-size: 18px; box-shadow: 6px 6px 0px var(--border-color);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.back-btn:hover { transform: translate(-4px, -4px); box-shadow: 10px 10px 0px var(--border-color); }
+
+/* --- レスポンシブ対応 --- */
+@media (max-width: 1024px) {
+  nav { padding: 20px 30px; }
+  .card-text { padding: 30px; }
+  .slide-in-left { transform: translateX(-50px); }
+  .slide-in-right { transform: translateX(50px); }
+}
+
+@media (max-width: 768px) {
+  nav { padding: 15px 20px; }
+  .logo { font-size: 20px; }
+  .card, .card.reverse { flex-direction: column; }
+  .card-image { min-height: 220px; max-height: 250px; order: -1; }
+  .card-text { padding: 25px 20px; }
+  .slide-in-left { transform: translateX(-30px) translateY(20px); }
+  .slide-in-right { transform: translateX(30px) translateY(20px); }
+  .cards-vertical { gap: 40px; padding-bottom: 60px; }
+  .btn-area { margin-bottom: 50px; }
+}
+</style>
+</head>
+<body>
+
+<!-- 背景装飾 -->
+<div class="deco deco-pink"></div>
+<div class="deco deco-blue"></div>
+<div class="deco deco-yellow"></div>
+<div class="deco deco-green"></div>
+<div class="deco deco-purple"></div>
+
+<nav>
+  <a href="index.html" class="logo">Ｎｅｗビジネスフェア×企業名 ✨</a>
+  <a href="index.html" style="font-weight:bold; text-decoration:none; color:var(--text-color); border:3px solid var(--border-color); padding:8px 20px; border-radius:50px; background:#fff; font-size: 14px;">Topへ戻る</a>
+</nav>
+
+<section class="hero">
+  <h1><span>ITインフラとクラウド環境</span>について</h1>
+  <p>目に見えないけれど、最も重要なビジネスの土台をポップかつセキュアに構築！</p>
+</section>
+
+<section class="cards-vertical">
+
+  <!-- セクション1 -->
+  <div class="card slide-in-left">
+    <div class="card-text">
+      <h3>オフィスのネットワークを見直そう</h3>
+      <p>「最近オフィスのWi-Fiが遅い…」「途切れて仕事にならない！」それはインフラの設計不足が原因かもしれません。私たちは配線整理から高速ルーターの設置、レイアウトに合わせた電波設計までワンストップでサポートします。</p>
+      <ul class="point-list">
+        <li>ケーブルのぐちゃぐちゃを解決する配線レス化</li>
+        <li>大人数でもサクサク繋がる高性能アクセスポイント</li>
+        <li>ゲスト用と業務用の回線を分ける安全設計</li>
+      </ul>
+    </div>
+    <div class="card-image">
+      <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc51?auto=format&fit=crop&q=80&w=600" alt="サーバーイメージ">
+    </div>
+  </div>
+
+  <!-- セクション2 -->
+  <div class="card reverse slide-in-right">
+    <div class="card-text">
+      <h3 class="blue-line">クラウド移行でどこでもオフィスに</h3>
+      <p>社内の大切なデータをクラウドへ引っ越すことで、出張先や自宅からでも安全かつリアルタイムにファイル共有が可能になります。サーバー運用のコストを劇的に抑えつつ、災害時（BCP）のデータ消失リスクも回避できます。</p>
+      <p>「何から手をつけて良いか分からない」という初心者企業様にも、最適な移行ステップをわかりやすくご提案！</p>
+    </div>
+    <div class="card-image">
+      <img src="https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&q=80&w=600" alt="ネットワーククラウドイメージ">
+    </div>
+  </div>
+
+  <!-- セクション3 -->
+  <div class="card slide-in-left">
+    <div class="card-text">
+      <h3 class="purple-line">ウイルスやサイバー攻撃から会社をガード</h3>
+      <p>近年激増しているランサムウェア（身代金要求型ウイルス）やなりすましメール。これらは企業の経営権すら脅かす脅威です。私たちは強力かつ運用が簡単な統合セキュリティソリューションをブースにて実演中！</p>
+      <p>「もしも」の時の備えはITも同じ。最新のアンチウイルスとバックアップ環境で、会社の信頼をしっかり防衛しましょう。</p>
+    </div>
+    <div class="card-image">
+      <img src="https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&q=80&w=600" alt="セキュアイメージ">
+    </div>
+  </div>
+
+</section>
+
+<div class="btn-area">
+  <a href="index.html" class="back-btn">フェアトップへ戻ってエントリーする 💌</a>
+</div>
+
+<script>
+function initScrollAnimation() {
+  const targetCards = document.querySelectorAll('.card');
+  
+  const observerOptions = {
+    root: null,
+    rootMargin: '0px',
+    threshold: 0.1
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('show');
+      }
+    });
+  }, observerOptions);
+
+  targetCards.forEach(card => observer.observe(card));
+}
+
+window.onload = () => {
+  initScrollAnimation();
+};
+</script>
+</body>
+</html>
