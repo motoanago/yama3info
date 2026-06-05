@@ -1,157 +1,276 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>詳細表示</title>
-    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
-    <style>
-        body { font-family: sans-serif; background-color: #f4f6f9; margin: 0; padding: 15px; color: #333; text-align: center; }
-        .card { background: #ffffff; max-width: 450px; margin: 0 auto; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); overflow: hidden; }
-        .header { background: #4A154B; color: #ffffff; padding: 15px; font-size: 18px; font-weight: bold; }
-        .content { padding: 20px; }
-        #video-container { position: relative; width: 100%; max-width: 360px; margin: 0 auto 15px; border-radius: 8px; overflow: hidden; background: #000; aspect-ratio: 1 / 1; }
-        #video { width: 100%; height: 100%; object-fit: cover; }
-        .scan-frame { position: absolute; top: 15%; left: 15%; width: 70%; height: 70%; border: 3px dashed #4CAF50; box-sizing: border-box; border-radius: 8px; pointer-events: none; }
-        .status-badge { display: inline-block; padding: 6px 16px; border-radius: 20px; font-weight: bold; font-size: 14px; margin-bottom: 20px; background-color: #e6f4ea; color: #137333; }
-        .info-group { margin-bottom: 18px; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px; text-align: left; }
-        .label { font-size: 12px; color: #666; margin-bottom: 4px; }
-        .value { font-size: 18px; font-weight: bold; color: #111; }
-        .btn { display: block; width: 100%; padding: 12px; background: #666; color: white; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>入場受付システム</title>
+<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+<style>
+body { font-family:sans-serif; background:#f4f6f9; margin:0; padding:15px; color:#333; text-align:center; }
+.card { background:#fff; max-width:450px; margin:0 auto; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.1); overflow:hidden; }
+.header { background:#4A154B; color:#fff; padding:15px; font-size:18px; font-weight:bold; }
+.content { padding:20px; }
+#video-container { position:relative; width:100%; max-width:360px; margin:0 auto 15px; border-radius:8px; overflow:hidden; background:#000; aspect-ratio:1/1; }
+#video { width:100%; height:100%; object-fit:cover; }
+.scan-frame { position:absolute; top:15%; left:15%; width:70%; height:70%; border:3px dashed #4CAF50; border-radius:8px; pointer-events:none; }
+.status-badge { display:inline-block; padding:6px 16px; border-radius:20px; font-weight:bold; font-size:14px; margin-bottom:20px; background:#e6f4ea; color:#137333; }
+.info-group { margin-bottom:18px; border-bottom:1px solid #f0f0f0; padding-bottom:8px; text-align:left; }
+.label { font-size:12px; color:#666; margin-bottom:4px; }
+.value { font-size:18px; font-weight:bold; color:#111; }
+.btn { display:block; width:100%; padding:12px; background:#666; color:white; border:none; border-radius:6px; font-size:16px; font-weight:bold; cursor:pointer; margin-top:10px; }
+.memo-btn { background:#2196F3; }
+textarea { width:100%; height:220px; padding:10px; box-sizing:border-box; border:1px solid #ccc; border-radius:6px; font-size:15px; resize:vertical; }
+</style>
 </head>
 <body>
 
 <div class="card">
-    <div class="header">入場受付システム</div>
-    <div class="content">
+<div class="header">入場受付システム</div>
 
-        <div id="camera-section">
-            <p style="font-weight:bold;">入場用QRコードをかざしてください</p>
-            <div id="video-container">
-                <video id="video" autoplay playsinline></video>
-                <div class="scan-frame"></div>
-            </div>
-            <div id="loading-message">カメラを起動中...</div>
-            <canvas id="canvas" style="display:none;"></canvas>
-        </div>
+<div class="content">
 
-        <div id="result-section" style="display: none;">
-            <div><span class="status-badge" id="res-status">確認OK（承認済み）</span></div>
-            <div class="info-group"><div class="label">氏名</div><div class="value" id="res-name"></div></div>
-            <div class="info-group"><div class="label">会社名</div><div class="value" id="res-company"></div></div>
-            <div class="info-group"><div class="label">部署</div><div class="value" id="res-dept"></div></div>
-            <div class="info-group"><div class="label">役職</div><div class="value" id="res-position"></div></div>
-            <button class="btn" onclick="resetCamera()">次の読取へ（戻る）</button>
-        </div>
+<div id="camera-section">
+<p style="font-weight:bold;">入場用QRコードをかざしてください</p>
 
-    </div>
+<div id="video-container">
+<video id="video" autoplay playsinline></video>
+<div class="scan-frame"></div>
+</div>
+
+<div id="loading-message">カメラを起動中...</div>
+<canvas id="canvas" style="display:none;"></canvas>
+</div>
+
+<div id="result-section" style="display:none;">
+
+<div>
+<span class="status-badge" id="res-status">確認OK（承認済み）</span>
+</div>
+
+<div class="info-group">
+<div class="label">氏名</div>
+<div class="value" id="res-name"></div>
+</div>
+
+<div class="info-group">
+<div class="label">会社名</div>
+<div class="value" id="res-company"></div>
+</div>
+
+<div class="info-group">
+<div class="label">部署</div>
+<div class="value" id="res-dept"></div>
+</div>
+
+<div class="info-group">
+<div class="label">役職</div>
+<div class="value" id="res-position"></div>
+</div>
+
+<div class="info-group">
+<div class="label">商談メモ</div>
+<textarea id="memo"></textarea>
+</div>
+
+<button class="btn memo-btn" onclick="saveMemo()">メモ登録</button>
+<button class="btn" onclick="resetCamera()">次の読取へ（戻る）</button>
+
+</div>
+
+</div>
 </div>
 
 <script>
-    // ★ここに新しくデプロイした「最新のGASのURL」を貼り付けてください
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbzDevjkkyKmeUkqFptBjCT9EcNOgloRzphpCcYP1KER2VTef7I54BbVt0oxOJIRrH-fzg/exec"; 
+const GAS_API_URL = "https://script.google.com/macros/s/AKfycbyniGTwCjddbJXZAaQPW8vvGeMDy-IbR4AQcXbe9YHUT4KjS9KI016C23y1oqVFSbTFxw/exec";
 
-    const video = document.getElementById('video');
-    const canvas = document.getElementById('canvas');
-    const ctx = canvas.getContext('2d');
-    const loadingMessage = document.getElementById('loading-message');
-    let videoStream = null;
-    let isScanning = true;
+const video = document.getElementById('video');
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+const loadingMessage = document.getElementById('loading-message');
 
-    // ページが開かれたときにURL引数(?qr=...)があれば直接照会、なければカメラ起動
-    window.onload = function() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const qrData = urlParams.get('qr');
-        if (qrData) {
-            fetchUserData(qrData);
-        } else {
-            startCamera();
-        }
-    };
+let videoStream = null;
+let isScanning = true;
+let currentQr = "";
 
-    function startCamera() {
-        document.getElementById('camera-section').style.display = 'block';
-        document.getElementById('result-section').style.display = 'none';
-        isScanning = true;
+window.onload = function() {
+    startCamera();
+};
 
-        navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
-            .then(function(stream) {
-                videoStream = stream;
-                video.srcObject = stream;
-                video.play();
-                requestAnimationFrame(tick);
-            })
-            .catch(function(err) {
-                loadingMessage.innerText = "カメラの起動に失敗しました。ブラウザのカメラ権限を確認してください。";
-            });
-    }
+function startCamera() {
 
-    function tick() {
-        if (!isScanning) return;
-        if (video.readyState === video.HAVE_ENOUGH_DATA) {
-            loadingMessage.innerText = "スキャン中...";
-            canvas.height = video.videoHeight;
-            canvas.width = video.videoWidth;
-            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-            const code = jsQR(imageData.data, imageData.width, imageData.height, { inversionAttempts: "dontInvert" });
+    document.getElementById('camera-section').style.display = 'block';
+    document.getElementById('result-section').style.display = 'none';
 
-            if (code) {
-                isScanning = false;
-                if (videoStream) {
-                    videoStream.getTracks().forEach(track => track.stop());
-                }
-                
-                let qrParam = code.data;
-                if (code.data.includes("qr=")) {
-                    const matches = code.data.match(/[?&]qr=([^&]+)/);
-                    if (matches && matches[1]) qrParam = decodeURIComponent(matches[1]);
-                }
-                fetchUserData(qrParam);
-                return;
-            }
-        }
+    isScanning = true;
+
+    navigator.mediaDevices.getUserMedia({
+        video: { facingMode: "environment" }
+    })
+    .then(function(stream){
+
+        videoStream = stream;
+        video.srcObject = stream;
+        video.play();
+
         requestAnimationFrame(tick);
-    }
 
-    function fetchUserData(qrValue) {
-        loadingMessage.innerText = "データを照会中...";
-        document.getElementById('camera-section').style.display = 'block';
-        document.getElementById('result-section').style.display = 'none';
+    })
+    .catch(function(){
 
-        // 裏側でGASへ問い合わせる
-        fetch(`${GAS_API_URL}?qr=${encodeURIComponent(qrValue)}`)
-            .then(res => res.json())
-            .then(data => {
-                document.getElementById('camera-section').style.display = 'none';
-                document.getElementById('result-section').style.display = 'block';
+        loadingMessage.innerText =
+            "カメラの起動に失敗しました";
 
-                if (data.found) {
-                    document.getElementById('res-status').innerText = data.status === '承認済み' ? '確認OK（承認済み）' : '未承認のデータです';
-                    document.getElementById('res-status').className = data.status === '承認済み' ? 'status-badge' : 'status-badge';
-                    document.getElementById('res-name').innerText = data.name + " 様";
-                    document.getElementById('res-company').innerText = data.company || "ー";
-                    document.getElementById('res-dept').innerText = data.dept || "ー";
-                    document.getElementById('res-position').innerText = data.position || "ー";
-                } else {
-                    alert("該当する来場者データが見つかりません。");
-                    resetCamera();
-                }
-            })
-            .catch(err => {
-                alert(
-                  "通信エラー\n\n" +
-                  err.message
+    });
+}
+
+function tick() {
+
+    if (!isScanning) return;
+
+    if (video.readyState === video.HAVE_ENOUGH_DATA) {
+
+        loadingMessage.innerText = "スキャン中...";
+
+        canvas.height = video.videoHeight;
+        canvas.width = video.videoWidth;
+
+        ctx.drawImage(video,0,0,canvas.width,canvas.height);
+
+        const imageData =
+            ctx.getImageData(
+                0,
+                0,
+                canvas.width,
+                canvas.height
+            );
+
+        const code = jsQR(
+            imageData.data,
+            imageData.width,
+            imageData.height,
+            { inversionAttempts:"dontInvert" }
+        );
+
+        if(code){
+
+            isScanning = false;
+
+            if(videoStream){
+                videoStream.getTracks().forEach(
+                    track => track.stop()
                 );
-            });
+            }
+
+            fetchUserData(code.data);
+            return;
+        }
     }
 
-    function resetCamera() {
-        // URLパラメータを綺麗にしてカメラを再起動
-        history.pushState(null, null, window.location.pathname);
-        startCamera();
+    requestAnimationFrame(tick);
+}
+
+function fetchUserData(qrValue){
+
+    fetch(
+        `${GAS_API_URL}?qr=${encodeURIComponent(qrValue)}`
+    )
+    .then(res => res.json())
+    .then(data => {
+
+        if(data.found){
+
+            currentQr = qrValue;
+
+            document.getElementById('camera-section').style.display='none';
+            document.getElementById('result-section').style.display='block';
+
+            document.getElementById('res-status').innerText =
+                data.status === '承認済み'
+                ? '確認OK（承認済み）'
+                : '未承認';
+
+            document.getElementById('res-name').innerText =
+                (data.name || '') + ' 様';
+
+            document.getElementById('res-company').innerText =
+                data.company || 'ー';
+
+            document.getElementById('res-dept').innerText =
+                data.dept || 'ー';
+
+            document.getElementById('res-position').innerText =
+                data.position || 'ー';
+
+            document.getElementById('memo').value =
+                data.memo || '';
+
+        } else {
+
+            alert('該当データが見つかりません');
+            resetCamera();
+
+        }
+
+    })
+    .catch(function(err){
+
+        alert('通信エラー\\n\\n' + err.message);
+
+    });
+}
+
+function saveMemo(){
+
+    const memo =
+        document.getElementById('memo').value.trim();
+
+    if(!memo){
+        alert('メモを入力してください');
+        return;
     }
+
+    fetch(
+        `${GAS_API_URL}?action=saveMemo`
+        + `&qr=${encodeURIComponent(currentQr)}`
+        + `&memo=${encodeURIComponent(memo)}`
+    )
+    .then(res => res.json())
+    .then(data => {
+
+        if(data.success){
+
+            document.getElementById('memo').value =
+                data.memo || memo;
+
+            alert('メモを登録しました');
+
+        } else {
+
+            alert(data.error || '保存失敗');
+
+        }
+
+    })
+    .catch(function(err){
+
+        alert('保存エラー\\n\\n' + err.message);
+
+    });
+}
+
+function resetCamera(){
+
+    document.getElementById('memo').value = '';
+
+    history.pushState(
+        null,
+        null,
+        window.location.pathname
+    );
+
+    startCamera();
+}
 </script>
+
 </body>
 </html>
