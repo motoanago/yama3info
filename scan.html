@@ -21,19 +21,16 @@
         overflow: hidden;
       }
       .header {
-        background: #4A154B; /* スプレッドシートのヘッダー色の紫 */
+        background: #4A154B; 
         color: #ffffff;
         padding: 15px;
         text-align: center;
         font-size: 18px;
         font-weight: bold;
-        position: relative;
       }
       .content {
         padding: 20px;
       }
-      
-      /* カメラ画面用のスタイル */
       #camera-view {
         text-align: center;
       }
@@ -52,7 +49,6 @@
         height: 100%;
         object-fit: cover;
       }
-      /* スキャンエリアの枠線案内 */
       .scan-frame {
         position: absolute;
         top: 15%;
@@ -69,8 +65,6 @@
         font-size: 14px;
         margin-top: 10px;
       }
-
-      /* 明細画面用のスタイル */
       .status-badge {
         display: inline-block;
         padding: 6px 16px;
@@ -82,10 +76,6 @@
       .status-ok {
         background-color: #e6f4ea;
         color: #137333;
-      }
-      .status-ng {
-        background-color: #fce8e6;
-        color: #c5221f;
       }
       .info-group {
         margin-bottom: 18px;
@@ -109,8 +99,6 @@
         padding: 30px 10px;
         font-weight: bold;
       }
-
-      /* ボタンのスタイル */
       .btn {
         display: block;
         width: 100%;
@@ -193,29 +181,25 @@
     </div>
 
     <script>
-      // カメラ制御用の変数
       let videoStream = null;
 
-      // カメラに戻るボタンの処理（URLパラメーターなしのトップ状態に戻す）
       function backToCamera() {
         const url = new URL(window.location.href);
-        url.search = ''; // パラメーターをクリア
+        url.search = ''; 
         window.location.href = url.toString();
       }
 
-      // 読取画面の時だけカメラを起動するスクリプトを実行
       <? if (!explicitScan) { ?>
         const video = document.getElementById('video');
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
         const loadingMessage = document.getElementById('loading-message');
 
-        // 背面カメラ（外カメラ）を指定して起動
         navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
           .then(function(stream) {
             videoStream = stream;
             video.srcObject = stream;
-            video.setAttribute("playsinline", true); // iOS対策
+            video.setAttribute("playsinline", true);
             video.play();
             requestAnimationFrame(tick);
           })
@@ -232,35 +216,28 @@
             ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
             
             const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-            // jsQRで毎フレーム画像からQRを検索
             const code = jsQR(imageData.data, imageData.width, imageData.height, {
               inversionAttempts: "dontInvert",
             });
 
             if (code) {
-              // QRコードの中に「?qr=」または「&qr=」が含まれているかチェック
               let qrParam = "";
               if (code.data.includes("qr=")) {
-                // URLからqrパラメータの値を抽出
                 const matches = code.data.match(/[?&]qr=([^&]+)/);
                 if (matches && matches[1]) {
                   qrParam = matches[1];
                 }
               } else {
-                // 念のため、生のテキストデータだった場合もそのまま流す
                 qrParam = encodeURIComponent(code.data);
               }
 
               if (qrParam) {
-                // 発見したらカメラのストップ処理をして、そのQRパラメーター付きのURLにリダイレクト
                 if (videoStream) {
                   videoStream.getTracks().forEach(track => track.stop());
                 }
-                
-                // 現在のGASウェブアプリURLに「?qr=データ」をつけて画面をリロードする
                 const baseUrl = window.location.href.split('?')[0];
                 window.location.href = baseUrl + "?qr=" + qrParam;
-                return; // ループを抜ける
+                return;
               }
             }
           }
